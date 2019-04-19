@@ -27,12 +27,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 
 /**
  *
  * @author kk
  */
 @Entity
+@Indexed
 @Table(name = "t_case")
 @XmlRootElement
 @NamedQueries({
@@ -75,11 +82,14 @@ public class TCase implements Serializable {
     @Column(name = "cs_billing_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date csBillingDate;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_case_number")
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String csCaseNumber;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -90,11 +100,14 @@ public class TCase implements Serializable {
     private String csDoctorIdent;
     @Column(name = "cs_fee_group_en")
     private BigInteger csFeeGroupEn;
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_hospital_ident")
+//    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String csHospitalIdent;
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "cs_kis_status_fl")
@@ -104,12 +117,20 @@ public class TCase implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "cs_status_en")
     private String csStatusEn;
+    
+    
     @Size(max = 255)
     @Column(name = "insurance_identifier")
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String insuranceIdentifier;
+    
+    
     @Size(max = 255)
     @Column(name = "insurance_number_patient")
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
     private String insuranceNumberPatient;
+    
+    
     @Column(name = "modification_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modificationDate;
@@ -342,5 +363,5 @@ public class TCase implements Serializable {
     public String toString() {
         return "com.luceneproject.luceneproject.TCase[ id=" + id + " ]";
     }
-    
+
 }

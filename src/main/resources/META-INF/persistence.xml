@@ -48,9 +48,9 @@
             <property name="hibernate.hbm2ddl.auto" value="create"/>
             -->
             <!-- store Hypernate Search Indexes in Filesystem  -->
-            <!-- Hypernate 5.11-->
-            <!--      <property name="hibernate.search.default.directory_provider" value="filesystem"/>
-            <property name="hibernate.search.default.indexBase" value="C:\LuceneProject\Indexes"/>-->
+            <!-- Hypernate 5.11 -->
+               <property name="hibernate.search.default.directory_provider" value="filesystem"/>
+            <property name="hibernate.search.default.indexBase" value="/home/kk/NetBeansProjects/LuceneProject/src/main/resources/Indexes"/>
             <!-- Hypernate Search 6 
               <property name="hibernate.search.backends.myBackend.type" value="lucene"/>
             <property name="hibernate.search.backends.myBackend.directory_provider" value="local_directory"/> 
