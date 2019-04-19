@@ -31,6 +31,7 @@ import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 
@@ -143,8 +144,12 @@ public class TCase implements Serializable {
     @JoinColumn(name = "t_patient_id", referencedColumnName = "id")
     @ManyToOne
     private TPatient tPatientId;
+    
+    @IndexedEmbedded
     @OneToMany(mappedBy = "tCaseId")
     private Collection<TCaseDetails> tCaseDetailsCollection;
+    
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseId")
     private Collection<TP301KainInka> tP301KainInkaCollection;
     @OneToMany(mappedBy = "tCaseId")

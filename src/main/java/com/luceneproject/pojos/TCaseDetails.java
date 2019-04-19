@@ -27,6 +27,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 /**
  *
@@ -87,11 +91,16 @@ public class TCaseDetails implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "admission_cause_en")
     private String admissionCauseEn;
+    
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "admission_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private Date admissionDate;
+    
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "admission_law_en")
@@ -117,16 +126,26 @@ public class TCaseDetails implements Serializable {
     @NotNull
     @Column(name = "age_days")
     private long ageDays;
+    
+    
     @Column(name = "age_years")
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
     private BigInteger ageYears;
+    
+    
     @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
     @Column(name = "creation_user")
     private BigDecimal creationUser;
+    
+    
     @Size(max = 255)
     @Column(name = "csd_comment")
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
     private String csdComment;
+    
+    
     @Column(name = "date_of_accident")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfAccident;
@@ -139,9 +158,13 @@ public class TCaseDetails implements Serializable {
     @Size(max = 255)
     @Column(name = "discharge_reason_3_en")
     private String dischargeReason3En;
+    
+    
     @Size(max = 255)
     @Column(name = "hd_icd_code")
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
     private String hdIcdCode;
+    
     @Column(name = "hmv")
     private BigInteger hmv;
     @Basic(optional = false)

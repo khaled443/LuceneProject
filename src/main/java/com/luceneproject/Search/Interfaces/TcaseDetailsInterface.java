@@ -9,7 +9,6 @@ package com.luceneproject.Search.Interfaces;
  *
  * @author kk
  */
-public interface SearchInterface extends TcaseInterface,TcaseDetailsInterface{
-        String persistenceUnitName = "com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU";
-
+public interface TcaseDetailsInterface {
+    
 }
