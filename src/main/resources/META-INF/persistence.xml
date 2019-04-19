@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+   <persistence-unit name="com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>com.luceneproject.hibernate.pojos.TCaseIcd</class>
+    <class>com.luceneproject.hibernate.pojos.TWmRequestBege</class>
+    <class>com.luceneproject.hibernate.pojos.TWmRequestAudit</class>
+    <class>com.luceneproject.hibernate.pojos.TWmReminder</class>
+    <class>com.luceneproject.hibernate.pojos.TCase</class>
+    <class>com.luceneproject.hibernate.pojos.TCaseOps</class>
+    <class>com.luceneproject.hibernate.pojos.TWmDocument</class>
+    <class>com.luceneproject.hibernate.pojos.TWmRequest</class>
+    <class>com.luceneproject.hibernate.pojos.TWmProcess</class>
+    <class>com.luceneproject.hibernate.pojos.TWmProcessHospital</class>
+    <class>com.luceneproject.hibernate.pojos.TWmAction</class>
+    <class>com.luceneproject.hibernate.pojos.TWmEvent</class>
+    <class>com.luceneproject.hibernate.pojos.TCaseDepartment</class>
+    <class>com.luceneproject.hibernate.pojos.TCaseDetails</class>
+    <class>com.luceneproject.hibernate.pojos.TP301KainInka</class>
+    <class>com.luceneproject.hibernate.pojos.TP301KainInkaPvv</class>
+    <class>com.luceneproject.hibernate.pojos.TWmRequestMdk</class>
+    <class>com.luceneproject.hibernate.pojos.TPatient</class>
+    <class>com.luceneproject.hibernate.pojos.TWmProcessInsurance</class>
+    <class>com.luceneproject.hibernate.pojos.TCaseWard</class>
+    <class>com.luceneproject.hibernate.pojos.TP301KainInkaPvt</class>
+    <class>com.luceneproject.hibernate.pojos.TWmProcessHospitalFinalis</class>
+    <class>com.luceneproject.hibernate.pojos.TPatientDetails</class>
+    <class>com.luceneproject.hibernate.pojos.TWmRequestInsurance</class>
+    <properties>
+      <!--connection to Oracle
+
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@LBBatch-01:1522:ORCL12"/>
+      <property name="javax.persistence.jdbc.user" value="DIRK22"/>
+      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="javax.persistence.jdbc.password" value="oracle"/>
+    
+            -->
+            
+            <!-- connection to PostgreSql -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=khdb"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.password" value="admin"/>
+            <!-- temp show sql Querys  -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <!-- create tables 
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            -->
+            <!-- store Hypernate Search Indexes in Filesystem  -->
+            <!-- Hypernate 5.11-->
+            <!--      <property name="hibernate.search.default.directory_provider" value="filesystem"/>
+            <property name="hibernate.search.default.indexBase" value="C:\LuceneProject\Indexes"/>-->
+            <!-- Hypernate Search 6 
+              <property name="hibernate.search.backends.myBackend.type" value="lucene"/>
+            <property name="hibernate.search.backends.myBackend.directory_provider" value="local_directory"/> 
+            <property name="hibernate.search.backends.myBackend.root_directory"  value="C:\LuceneProject\Indexes"/>
+            <property name="hibernate.search.default_backend" value="myBackend"/> 
+            -->
+        </properties>
+    </persistence-unit>
+</persistence>
