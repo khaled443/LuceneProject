@@ -105,7 +105,7 @@ public class TCase implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_hospital_ident")
-//    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
     private String csHospitalIdent;
 
     @Basic(optional = false)
