@@ -22,6 +22,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 /**
  *
@@ -61,11 +65,16 @@ public class TCaseOps implements Serializable {
     private Date modificationDate;
     @Column(name = "modification_user")
     private BigDecimal modificationUser;
+    
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "opsc_code")
+        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
     private String opscCode;
+    
+    
     @Column(name = "opsc_datum")
     @Temporal(TemporalType.TIMESTAMP)
     private Date opscDatum;

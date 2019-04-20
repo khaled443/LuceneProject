@@ -5,10 +5,14 @@
  */
 package com.luceneproject.Search.Interfaces;
 
+import java.util.List;
+
 /**
  *
  * @author kk
  */
 public interface TcaseDetailsInterface {
+    
+    List getByCsdComment(String csdComment);
     
 }

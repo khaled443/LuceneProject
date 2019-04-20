@@ -26,6 +26,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 /**
  *
@@ -65,11 +69,16 @@ public class TCaseIcd implements Serializable {
     private BigDecimal creationUser;
     @Column(name = "icd_reference_en")
     private BigInteger icdReferenceEn;
+    
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "icdc_code")
+        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
     private String icdcCode;
+    
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)

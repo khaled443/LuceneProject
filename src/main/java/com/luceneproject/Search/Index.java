@@ -5,6 +5,7 @@
  */
 package com.luceneproject.Search;
 
+import com.luceneproject.Search.Interfaces.SearchInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -21,7 +22,7 @@ import org.hibernate.search.Search;
 public class Index {
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
+            .createEntityManagerFactory(SearchInterface.persistenceUnitName);
 
     public static void main(String[] args) {
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();

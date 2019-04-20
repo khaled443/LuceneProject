@@ -5,11 +5,12 @@
  */
 package com.luceneproject.Search.Interfaces;
 
+import java.util.List;
+
 /**
  *
  * @author kk
  */
-public interface SearchInterface extends TcaseInterface,TcaseDetailsInterface, TcaseIcdInterface{
-       static String persistenceUnitName = "com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU";
-
+public interface TcaseIcdInterface {
+    List getByIcdcCode(String icdcCode);
 }

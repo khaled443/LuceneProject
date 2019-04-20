@@ -157,4 +157,68 @@ public class SearchManager implements SearchInterface {
         return result;
     }
 
+    @Override
+    public List getByCsdComment(String csdComment) {
+        
+                        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        FullTextEntityManager fullTextEntityManager
+                = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+        em.getTransaction().begin();
+
+// create native Lucene query unsing the query DSL
+// alternatively you can write the Lucene query using the Lucene query parser
+// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+        QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder().forEntity(TCase.class).get();
+        org.apache.lucene.search.Query luceneQuery = qb
+                .keyword()
+                .onField("tCaseDetailsCollection.csdComment")
+                .matching(csdComment)
+                .createQuery();
+
+// wrap Lucene query in a javax.persistence.Query
+        javax.persistence.Query jpaQuery
+                = fullTextEntityManager.createFullTextQuery(luceneQuery, TCase.class);
+
+// execute search
+        List result = jpaQuery.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        
+        return result;
+    }
+
+    @Override
+    public List getByIcdcCode(String icdcCode) {
+    
+                        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        FullTextEntityManager fullTextEntityManager
+                = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+        em.getTransaction().begin();
+
+// create native Lucene query unsing the query DSL
+// alternatively you can write the Lucene query using the Lucene query parser
+// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+        QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder().forEntity(TCase.class).get();
+        org.apache.lucene.search.Query luceneQuery = qb
+                .keyword()
+                .onField("tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode")
+                .matching(icdcCode)
+                .createQuery();
+
+// wrap Lucene query in a javax.persistence.Query
+        javax.persistence.Query jpaQuery
+                = fullTextEntityManager.createFullTextQuery(luceneQuery, TCase.class);
+
+// execute search
+        List result = jpaQuery.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        
+        return result;
+    }
+
 }

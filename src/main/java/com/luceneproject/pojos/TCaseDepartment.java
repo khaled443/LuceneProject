@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 /**
  *
@@ -117,8 +118,12 @@ public class TCaseDepartment implements Serializable {
     @JoinColumn(name = "t_case_details_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private TCaseDetails tCaseDetailsId;
+    
+    @IndexedEmbedded
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
     private Collection<TCaseIcd> tCaseIcdCollection;
+   
+    @IndexedEmbedded
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
     private Collection<TCaseOps> tCaseOpsCollection;
 

@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 /**
@@ -220,6 +221,8 @@ public class TCaseDetails implements Serializable {
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne
     private TCaseDetails parentId;
+    
+    @IndexedEmbedded
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDetailsId")
     private Collection<TCaseDepartment> tCaseDepartmentCollection;
 

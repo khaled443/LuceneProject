@@ -19,7 +19,7 @@ public class MainSearch {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        sm = new SearchManager();
+            sm = new SearchManager();
 
         while (true) {
             System.out.println("");
@@ -32,8 +32,10 @@ public class MainSearch {
             System.out.println("4) InsuranceNumberPatient");
             System.out.println("");
             System.out.println("______TCaseDepartment______");
-            System.out.println("5) ");
-            System.out.println("6) ");
+            System.out.println("5) csdComment");
+            System.out.println("______TCaseIcd______");
+
+            System.out.println("6) Icd");
             String s = scanner.next();
 
             if (s.equals("q")) {
@@ -60,10 +62,12 @@ public class MainSearch {
                         tCaseInsuranceNumberPatient(searchTerm);
                         break;
                     case "5":
-
+                         searchTerm = scanner.next();
+                         tCaseDetailsCsdComment(searchTerm);
                         break;
                     case "6":
-                        
+                        searchTerm = scanner.next();
+                        tCaseIcd(searchTerm);
                         break;
 
                 }
@@ -97,6 +101,16 @@ public class MainSearch {
         List<TCase> InsuranceNumberPatient = sm.getByInsuranceNumberPatient(s);
         printResults(InsuranceNumberPatient);
 
+    }
+    public static void tCaseDetailsCsdComment(String s){
+        
+        List<TCase> csdComment = sm.getByCsdComment(s);
+        printResults(csdComment);
+    }
+    
+    public static void tCaseIcd(String s){
+        List<TCase> icd = sm.getByIcdcCode(s);
+        printResults(icd);
     }
 
     private static void printResults(List<TCase> results) {
