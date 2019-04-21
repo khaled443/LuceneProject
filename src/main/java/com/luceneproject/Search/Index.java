@@ -14,12 +14,24 @@ import javax.persistence.Persistence;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
+import org.hibernate.search.batchindexing.MassIndexerProgressMonitor;
+import org.hibernate.search.util.jmx.impl.JMXRegistrar;
+
+import com.luceneproject.pojos.*;
+import org.hibernate.search.batchindexing.impl.SimpleIndexingProgressMonitor;
+
 
 /**
- *
+ * 6.3.2. Using a MassIndexer
+ * 
  * @author kk
+ * 
+ * 
  */
 public class Index {
+    
+       static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(loggg.class.getName());
+
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
             .createEntityManagerFactory(SearchInterface.persistenceUnitName);
@@ -27,12 +39,22 @@ public class Index {
     public static void main(String[] args) {
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
 
+        //Monitor the process bar
+        MassIndexerProgressMonitor monitor = new SimpleIndexingProgressMonitor();
+        
+//         monitor.addToTotalCount(3);
+         
             FullTextSession fullTextSession = Search.getFullTextSession(em.unwrap(Session.class));
+           
+            
+          
             try {
-                fullTextSession.createIndexer().startAndWait();
+                fullTextSession.createIndexer().progressMonitor(monitor).startAndWait();
+              
             } catch (InterruptedException ex) {
                 Logger.getLogger(Index.class.getName()).log(Level.SEVERE, null, ex);
             
+              
              }finally{
                   em.close();
                   ENTITY_MANAGER_FACTORY.close();
