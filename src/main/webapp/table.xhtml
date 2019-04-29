@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+
+        <h:outputStylesheet name="style.css" library="css" />
+    </h:head>
+    <h:body>
+
+        <h:form>
+            <p:dataTable var="car" value="#{dtFilterView.cars}" widgetVar="carsTable"
+                         id="t"
+                         emptyMessage="No cars found with given criteria" filteredValue="#{dtFilterView.filteredCars}">
+                <f:facet name="header" >
+                    <p:outputPanel>
+                        <h:outputText value="Search all fields:" />
+                        <p:inputText id="globalFilter" onkeyup="PF('carsTable').filter()" style="width:550px" placeholder="Enter keyword"/>
+                    </p:outputPanel>
+                </f:facet>
+
+
+
+                <!--Column-->     
+                <p:column id="cs_case_number" style="width: 190px" >
+                    <f:facet name="footer"  >
+                        <h:outputText value="tcase.cs_case_number" id="footerId"/>
+                        <p:tooltip value="Tabellenname in der Datenbank" for="footerId" />
+
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Fallnummer" />
+                        <br/>                     
+
+                        <h:form>
+                            <h:inputText  value="#{dtFilterView.csCaseNumber}"/>
+                            <h:commandButton  action="#{dtFilterView.createMoreCars()}" style="display:none;" value="submit"/>
+                        </h:form>
+
+                        <p:tooltip value="Fallnummer in Bezug auf das Krankenhaus (Krankenhausinterne Fallnummer)" for="cs_case_number" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!-- Column -->    
+                <p:column id="cs_hospital_ident" style="width: 190px" >
+                    <f:facet name="footer"  >
+                        <h:outputText value="tcase.cs_hospital_ident" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Identifikationsnumme des Krankenhauses" />
+                        <br/>                     
+                         <h:form>
+                            <h:inputText  value="#{dtFilterView.csCaseNumber}"/>
+                            <h:commandButton action="#{dtFilterView.createMoreCars()}" style="display:none;" value="submit"/>
+                        </h:form>
+
+                        <p:tooltip value="Identifikationsnummer des Krankenhauses, das den Fall bearbeitet. Weitere Informationen in der Tabelle CPX_common.C_HOSPITAL (HOS_IDENT)" for="cs_hospital_ident" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!-- Column -->    
+                <p:column id="insurance_identifier" style="width: 190px" >
+                    <f:facet name="footer"  >
+                        <h:outputText value="tcase.insurance_identifier" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Identifikator der Versicherung" />
+                        <br/>                     
+                        <h:inputText >
+                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                        </h:inputText>
+                        <p:tooltip value="Identifikator (IKZ) der Versicherung für diesen Fall" for="insurance_identifier" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!-- Column INSURANCE_NUMBER_PATIENT -->    
+                <p:column id="insurance_number_patient" style="width: 190px" >
+                    <f:facet name="footer"  >
+                        <h:outputText value="tcase.insurance_number_patient" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Versicherungsnummer des Patienten" />
+                        <br/>                     
+                        <h:inputText >
+                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                        </h:inputText>
+                        <p:tooltip value="Versicherungsnummer des Patienten bei der Versicherung." for="insurance_number_patient" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!-- Column HD_ICD_CODE -->    
+                <p:column id="hd_icd_code" style="width: 190px" >
+                    <f:facet name="footer"   >
+                        <h:outputText value="tcase_details.hd_icd_code" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Versicherungsnummer des Patienten" />
+                        <br/>                     
+                        <h:inputText >
+                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                        </h:inputText>
+                        <p:tooltip value="Icd-Code der Hauptdiagnose" for="hd_icd_code" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!--  Column csd_comment -->
+                <p:column id="csd_comment" style="width: 190px" >
+                    <f:facet name="footer"   >
+                        <h:outputText value="tcase_details.csd_comment" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="fall beschreibung" />
+                        <br/>                     
+                        <h:inputText >
+                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                        </h:inputText>
+                        <p:tooltip value="Beschreibung zu dem Fall." for="csd_comment" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+                <!--  Column AGE_YEARS -->
+                <p:column id="age_years" style="width: 190px" >
+                    <f:facet name="footer"   >
+                        <h:outputText value="tcase_details.age_years" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="age in years" />
+                        <br/>           
+
+
+                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+
+                        <p:tooltip value="age_years" for="age_years" />
+                    </f:facet>
+                    <h:outputText value="#{car.id}" />
+                </p:column>
+
+
+                <p:column filterBy="#{car.year}" headerText="Year" footerText="lte" filterMatchMode="lte">
+                    <f:facet name="filter">
+                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+                            <f:converter converterId="javax.faces.Integer" />
+                        </p:spinner>
+                    </f:facet>
+                    <h:outputText value="#{car.year}" />
+                </p:column>
+                <!--
+                                <p:column filterBy="#{car.brand}" headerText="Brand" footerText="exact" filterMatchMode="exact">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('carsTable').filter()" styleClass="custom-filter">
+                                            <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{dtFilterView.brands}" />
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{car.brand}" />
+                                </p:column>
+                
+                                <p:column filterBy="#{car.color}" headerText="Color" footerText="in" filterMatchMode="in">
+                                    <f:facet name="filter">
+                                        <p:selectCheckboxMenu label="Colors" onchange="PF('carsTable').filter()" scrollHeight="150" styleClass="custom-filter">
+                                            <f:selectItems value="#{dtFilterView.colors}" />
+                                        </p:selectCheckboxMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{car.color}" />
+                                </p:column>
+                
+                                <p:column filterBy="#{car.sold}" headerText="Status" footerText="equals" filterMatchMode="equals">
+                                    <f:facet name="filter">
+                                        <p:selectOneButton onchange="PF('carsTable').filter()" styleClass="custom-filter">
+                                            <f:converter converterId="javax.faces.Boolean" />
+                                            <f:selectItem itemLabel="All" itemValue="" />
+                                            <f:selectItem itemLabel="Sold" itemValue="true" />
+                                            <f:selectItem itemLabel="Sale" itemValue="false" />
+                                        </p:selectOneButton>
+                                    </f:facet>
+                                    <h:outputText value="#{car.sold ? 'Sold': 'Sale'}" />
+                                </p:column>
+                
+                                <p:column filterBy="#{car.price}" headerText="Price" footerText="custom (min)" filterFunction="#{dtFilterView.filterByPrice}" id="tt" >
+                                    <h:outputText value="#{car.price}" >
+                                        <f:convertNumber currencySymbol="$" type="currency" />
+                                    </h:outputText>
+                                </p:column>-->
+
+
+
+            </p:dataTable>
+
+
+        </h:form>
+
+    </h:body>
+</html>
+

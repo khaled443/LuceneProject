@@ -128,6 +128,20 @@
             <version>5.11.1.Final</version>
         </dependency> 
         
+        <!-- Primefaces Themes -->
+        <dependency>
+            <groupId>org.primefaces.themes</groupId>
+            <artifactId>all-themes</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+        
+        <!-- hboss log -->
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.3.0.Final</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
