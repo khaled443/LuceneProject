@@ -12,41 +12,51 @@ import javax.faces.bean.ViewScoped;
 import com.luceneproject.pojos.*;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.model.LazyDataModel;
 
 /**
  *
  * @author kk
  */
 @ManagedBean(name = "fallData")
-@ViewScoped
+@RequestScoped
 //@SessionScoped
-public class FilterView implements Serializable {
+public class FilterView  {
+
+    FallLazyDataModel dataModel = new  FallLazyDataModel();
 
 
-    public FilterView(){
-        
-    }
-    private List<Fall> falls;
+
+ 
+//    private List<Fall> falls;
     
 
-    //fallManager
-    @ManagedProperty("#{fallManager}")
-    private FallManager manager;
+//    //fallManager
+//    @ManagedProperty("#{fallManager}")
+//    private FallManager manager;
 
-    @PostConstruct
-    public void init() {
-        falls = manager.getFalls(0, 10);      
+//    @PostConstruct
+//    public void init() {
+//        falls = manager.getFalls(0, 10);      
+//    }
+//
+//    public List<Fall> getFalls() {
+//        return falls;
+//    }
+
+
+//
+//    public void setManager(FallManager manager) {
+//        this.manager = manager;
+//    }
+
+    public LazyDataModel<Fall> getModel(){
+        return dataModel;
     }
-
-    public List<Fall> getFalls() {
-        return falls;
-    }
-
-
-
-    public void setManager(FallManager manager) {
-        this.manager = manager;
-    }
+    
+    
+ 
     
 }
