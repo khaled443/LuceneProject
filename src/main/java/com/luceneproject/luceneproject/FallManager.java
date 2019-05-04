@@ -25,73 +25,63 @@ import javax.persistence.TypedQuery;
  *
  * @author kk
  */
-@ManagedBean(name = "fallManager" )
+@ManagedBean(name = "fallManager")
 @ApplicationScoped
 //@SessionScoped
 public class FallManager {
 
     //this should be global and always on
-//    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-//            .createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
+    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
+            .createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
 
     public List<Fall> getFalls(int first, int last) {
 //        List<TCase> tcases = null;
         List<Fall> falls = new ArrayList<Fall>();
 //
-//        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
-//        EntityTransaction transaction = null;
-//
-//        try {
-//            transaction = em.getTransaction();
-//            transaction.begin();
-//
-//            TypedQuery<TCase> query = em.createNamedQuery("TCase.findAll", TCase.class);
-//            query.setFirstResult(first);
-//            query.setMaxResults(last);
-//            tcases = query.getResultList();
-//            transaction.commit();
-//
-//            for (TCase tcase : tcases) {
-//                //Tcase
-//                String cs_case_number ="";
-//                String cs_hospital_ident="";
-//                String insurance_identifier="";
-//                String insuran//                //TCase_details
-//                List<String> hd_icd_code = null;
-//                List<String> csd_comment=null;
-//                List<BigInteger> age_years=null;
-//                List<Date> admisstion_date=null;ce_identifier_patient="";
-//
-//                //TCase_details
-                List<String> hd_icd_code = new ArrayList<String>();
-                List<String> csd_comment=new ArrayList<String>();
-                List<BigInteger> age_years=new ArrayList<BigInteger>();
-                List<Date> admisstion_date=new ArrayList<Date>();
-//
-//                cs_case_number = tcase.getCsCaseNumber();
-//                cs_hospital_ident = tcase.getCsHospitalIdent();
-//                insurance_identifier = tcase.getInsuranceIdentifier();
-//                insurance_identifier_patient = tcase.getInsuranceNumberPatient();
-//
-//                List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
-//                for (TCaseDetails tcaseDestailse : tcaseDestailses) {
-//                      hd_icd_code.add(tcaseDestailse.getHdIcdCode());
-//                      csd_comment.add(tcaseDestailse.getCsdComment());
-//                      age_years.add(tcaseDestailse.getAgeYears());
-//                      admisstion_date.add(tcaseDestailse.getAdmissionDate());
-//                }
-//                Fall fall = new Fall(cs_case_number, cs_hospital_ident, insurance_identifier, insurance_identifier_patient, hd_icd_code, csd_comment, age_years, admisstion_date);
-//                falls.add(fall);
-//
-//            }
-//
-//        } catch (Exception e) {
-//            //logger
-//        }
-    
+        EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
 
-Fall fall = new Fall("test");
-falls.add(fall);
-return falls;
+        transaction = em.getTransaction();
+        transaction.begin();
+
+        TypedQuery<TCase> query = em.createNamedQuery("TCase.findAll", TCase.class);
+        query.setFirstResult(0);
+        query.setMaxResults(50);
+        List<TCase> tcases = query.getResultList();
+        transaction.commit();
+
+        for (TCase tcase : tcases) {
+            //Tcase
+            Fall fall = new Fall();
+            fall.setCs_case_number(tcase.getCsCaseNumber());
+            fall.setCs_hospital_ident(tcase.getCsHospitalIdent());
+            fall.setInsurance_identifier(tcase.getInsuranceIdentifier());
+            fall.setInsurance_identifier_patient(tcase.getInsuranceNumberPatient());
+
+            List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
+
+            List<String> hdIcdCode = new ArrayList<String>();
+            List<String> csd_comment = new ArrayList<String>();
+            List<BigInteger> age_years = new ArrayList<BigInteger>();
+            List<Date> admisstion_date = new ArrayList<Date>();
+
+            for (TCaseDetails tcaseDestailse : tcaseDestailses) {
+                hdIcdCode.add(tcaseDestailse.getHdIcdCode());
+                csd_comment.add(tcaseDestailse.getCsdComment());
+                age_years.add(tcaseDestailse.getAgeYears());
+                admisstion_date.add(tcaseDestailse.getAdmissionDate());
+              
+            }
+            
+            fall.setHd_icd_code(hdIcdCode);
+            fall.setCsd_comment(csd_comment);
+            fall.setAge_years(age_years);
+            fall.setAdmisstion_date(admisstion_date);
+            
+            
+            falls.add(fall);
+        }
+
+        return falls;
     }
 }

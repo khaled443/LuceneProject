@@ -7,86 +7,46 @@ package com.luceneproject.luceneproject;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import com.luceneproject.pojos.*;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 
 /**
  *
  * @author kk
  */
-@ManagedBean(name="dtFilterView")
+@ManagedBean(name = "fallData")
 @ViewScoped
+//@SessionScoped
 public class FilterView implements Serializable {
-     
-    private List<Car> cars;
-     
-    private List<Car> filteredCars;
-    
-    private String csCaseNumber;
 
-    @ManagedProperty("#{carService}")
-    private CarService service;
- 
+
+    public FilterView(){
+        
+    }
+    private List<Fall> falls;
+    
+
+    //fallManager
+    @ManagedProperty("#{fallManager}")
+    private FallManager manager;
+
     @PostConstruct
     public void init() {
-        cars = service.createCars(10);
-    }
-     
-    public boolean filterByPrice(Object value, Object filter, Locale locale) {
-        String filterText = (filter == null) ? null : filter.toString().trim();
-        if(filterText == null||filterText.equals("")) {
-            return true;
-        }
-         
-        if(value == null) {
-            return false;
-        }
-         
-        return ((Comparable) value).compareTo(Integer.valueOf(filterText)) > 0;
-    }
-     
-    public List<String> getBandos() {
-        return service.getBrands();
-    }
-     
-    public List<String> getColors() {
-        return service.getColors();
-    }
-     
-    public List<Car> getCars() {
-        return cars;
-    }
- 
-    public List<Car> getFilteredCars() {
-        return filteredCars;
-    }
- 
-    public void setFilteredCars(List<Car> filteredCars) {
-        this.filteredCars = filteredCars;
-    }
- 
-    public void setService(CarService service) {
-        this.service = service;
+        falls = manager.getFalls(0, 10);      
     }
 
-    public String getCsCaseNumber() {
-        return csCaseNumber;
+    public List<Fall> getFalls() {
+        return falls;
     }
 
-    public void setCsCaseNumber(String csCaseNumber) {
-        this.csCaseNumber = csCaseNumber;
+
+
+    public void setManager(FallManager manager) {
+        this.manager = manager;
     }
     
-    public void createMoreCars(){
-           Car c;
-        if (csCaseNumber==null || csCaseNumber.isEmpty() ) {
-           c = new Car("khaled ", "kh", 10, "kh");
-        }else{   
-      c= new Car(csCaseNumber, "kh", 10, "kh");
-        }
-        cars.add(c);
-    }
 }
