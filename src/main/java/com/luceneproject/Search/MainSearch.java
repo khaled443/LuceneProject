@@ -5,7 +5,7 @@
  */
 package com.luceneproject.Search;
 
-import com.luceneproject.pojos.TCase;
+import com.luceneproject.pojos.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,7 +19,7 @@ public class MainSearch {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-            sm = new SearchManager();
+        sm = new SearchManager();
 
         while (true) {
             System.out.println("");
@@ -62,8 +62,8 @@ public class MainSearch {
                         tCaseInsuranceNumberPatient(searchTerm);
                         break;
                     case "5":
-                         searchTerm = scanner.next();
-                         tCaseDetailsCsdComment(searchTerm);
+                        searchTerm = scanner.next();
+                        tCaseDetailsCsdComment(searchTerm);
                         break;
                     case "6":
                         searchTerm = scanner.next();
@@ -86,7 +86,7 @@ public class MainSearch {
     public static void tCaseCsCaseNumber(String s) {
 
         List<TCase> cscase = sm.getByCsCaseNumber(s);
-        printResults(cscase);
+//        printResults(cscase);
     }
 
     public static void tCaseInsuranceIdentifier(String s) {
@@ -102,18 +102,19 @@ public class MainSearch {
         printResults(InsuranceNumberPatient);
 
     }
-    public static void tCaseDetailsCsdComment(String s){
-        
+
+    public static void tCaseDetailsCsdComment(String s) {
+
         List<TCase> csdComment = sm.getByCsdComment(s);
         printResults(csdComment);
     }
-    
-    public static void tCaseIcd(String s){
+
+    public static void tCaseIcd(String s) {
         List<TCase> icd = sm.getByIcdcCode(s);
         printResults(icd);
     }
 
-    private static void printResults(List<TCase> results) {
+    public static void printResults(List<TCase> results) {
         System.out.println("Resuls: ");
         System.out.println("****************");
         for (TCase result : results) {
@@ -121,9 +122,16 @@ public class MainSearch {
             System.out.println("Casenumber: " + result.getCsCaseNumber());
             System.out.println("insurance Identifier: " + result.getInsuranceIdentifier());
             System.out.println("Hospital Ident: " + result.getCsHospitalIdent());
-            System.out.println("InsuranceNumberPatient: "+result.getInsuranceNumberPatient());
+            System.out.println("InsuranceNumberPatient: " + result.getInsuranceNumberPatient());
             System.out.println("");
+
+            List<TCaseDetails> tDetails = (List<TCaseDetails>) result.getTCaseDetailsCollection();
+
+            for (TCaseDetails tCaseDetails : tDetails) {
+                System.out.println("        Age in years"+tCaseDetails.getAgeYears());
+            }
         }
+
         System.out.println("************************");
     }
 

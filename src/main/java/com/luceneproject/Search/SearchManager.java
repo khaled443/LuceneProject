@@ -53,6 +53,7 @@ public class SearchManager implements SearchInterface {
 // execute search
         List result = jpaQuery.getResultList();
 
+        MainSearch.printResults(result);
         em.getTransaction().commit();
         em.close();
         

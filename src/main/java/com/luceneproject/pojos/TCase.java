@@ -15,6 +15,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -91,7 +92,7 @@ public class TCase implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_case_number")
-    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.YES)
     private String csCaseNumber;
 
     @Basic(optional = false)
@@ -109,7 +110,7 @@ public class TCase implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_hospital_ident")
-    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.YES)
     private String csHospitalIdent;
 
     @Basic(optional = false)
@@ -125,13 +126,13 @@ public class TCase implements Serializable {
     
     @Size(max = 255)
     @Column(name = "insurance_identifier")
-    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.YES)
     private String insuranceIdentifier;
     
     
     @Size(max = 255)
     @Column(name = "insurance_number_patient")
-    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.YES)
     private String insuranceNumberPatient;
     
     
@@ -149,7 +150,7 @@ public class TCase implements Serializable {
     private TPatient tPatientId;
     
     @IndexedEmbedded
-    @OneToMany(mappedBy = "tCaseId")
+    @OneToMany(mappedBy = "tCaseId" )
     private Collection<TCaseDetails> tCaseDetailsCollection;
     
     

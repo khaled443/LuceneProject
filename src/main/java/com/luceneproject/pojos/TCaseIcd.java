@@ -75,7 +75,7 @@ public class TCaseIcd implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "icdc_code")
-        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private String icdcCode;
     
     

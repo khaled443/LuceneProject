@@ -18,6 +18,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.query.dsl.QueryBuilder;
 
 /**
  *
@@ -29,7 +31,26 @@ public enum DataService {
     private final EntityManagerFactory emf
             = Persistence.createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
 
-    public List<Fall> getFallsList(int start, int size,  Map<String, Object> filters) {
+    public List<Fall> getFallsList(int start, int size, Map<String, Object> filters) {
+        List<Fall> falls = new ArrayList<Fall>();
+
+        if (filters != null && filters.size() > 0) {
+            falls = getListfromLucene(start, size, filters);
+        } else {
+            falls = getListFromeHibernate(start, size);
+
+        }
+        return falls;
+    }
+
+    public int getFallsTotalCount() {
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("Select count(*) From TCase t");
+        return ((Long) query.getSingleResult()).intValue();
+    }
+
+    private List<Fall> getListFromeHibernate(int start, int size) {
+
         List<Fall> falls = new ArrayList<Fall>();
 
         EntityManager em = emf.createEntityManager();
@@ -42,7 +63,9 @@ public enum DataService {
         query.setFirstResult(start);
         query.setMaxResults(size);
         List<TCase> tcases = query.getResultList();
+        
         transaction.commit();
+        
 
         for (TCase tcase : tcases) {
             //Tcase
@@ -73,14 +96,81 @@ public enum DataService {
             fall.setAdmisstion_date(admisstion_date);
 
             falls.add(fall);
-            
+
         }
+        em.close();
+       
         return falls;
     }
-    
-      public int getFallsTotalCount() {
-      EntityManager em = emf.createEntityManager();
-      Query query = em.createQuery("Select count(*) From TCase t");
-      return ((Long)query.getSingleResult()).intValue();
-  }
+
+    private List<Fall> getListfromLucene(int start, int size, Map<String, Object> filters) {
+        List<Fall> filteredFalls = new ArrayList<Fall>();
+        System.out.println("till here ************************1***");
+
+        
+        
+        for (Map.Entry<String, Object> entry : filters.entrySet()) {
+            EntityManager em = emf.createEntityManager();
+            FullTextEntityManager fullTextEntityManager
+                    = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+            em.getTransaction().begin();
+
+// create native Lucene query unsing the query DSL
+// alternatively you can write the Lucene query using the Lucene query parser
+// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+            QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+                    .buildQueryBuilder().forEntity(TCase.class).get();
+            org.apache.lucene.search.Query luceneQuery = qb
+                    .keyword()
+                    .wildcard()
+                    
+                    .onField("csCaseNumber")
+                    .matching(entry.getValue().toString()+"*")
+                    .createQuery();
+
+// wrap Lucene query in a javax.persistence.Query
+            javax.persistence.Query jpaQuery
+                    = fullTextEntityManager.createFullTextQuery(luceneQuery, TCase.class)
+                    .setFirstResult(start)
+                    .setMaxResults(size);
+
+// execute search
+            List<TCase> result = jpaQuery.getResultList();
+
+            for (TCase tcase : result) {
+                //Tcase
+                Fall fall = new Fall();
+                fall.setCs_case_number(tcase.getCsCaseNumber());
+                fall.setCs_hospital_ident(tcase.getCsHospitalIdent());
+                fall.setInsurance_identifier(tcase.getInsuranceIdentifier());
+                fall.setInsurance_identifier_patient(tcase.getInsuranceNumberPatient());
+
+                List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
+
+                List<String> hdIcdCode = new ArrayList<String>();
+                List<String> csd_comment = new ArrayList<String>();
+                List<BigInteger> age_years = new ArrayList<BigInteger>();
+                List<Date> admisstion_date = new ArrayList<Date>();
+
+                for (TCaseDetails tcaseDestailse : tcaseDestailses) {
+                    hdIcdCode.add(tcaseDestailse.getHdIcdCode());
+                    csd_comment.add(tcaseDestailse.getCsdComment());
+                    age_years.add(tcaseDestailse.getAgeYears());
+                    admisstion_date.add(tcaseDestailse.getAdmissionDate());
+
+                }
+
+                fall.setHd_icd_code(hdIcdCode);
+                fall.setCsd_comment(csd_comment);
+                fall.setAge_years(age_years);
+                fall.setAdmisstion_date(admisstion_date);
+
+                filteredFalls.add(fall);
+
+            }
+
+        }
+
+        return filteredFalls;
+    }
 }

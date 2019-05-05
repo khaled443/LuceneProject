@@ -130,7 +130,7 @@ public class TCaseDetails implements Serializable {
     
     
     @Column(name = "age_years")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private BigInteger ageYears;
     
     
@@ -143,7 +143,7 @@ public class TCaseDetails implements Serializable {
     
     @Size(max = 255)
     @Column(name = "csd_comment")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private String csdComment;
     
     
@@ -163,7 +163,7 @@ public class TCaseDetails implements Serializable {
     
     @Size(max = 255)
     @Column(name = "hd_icd_code")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private String hdIcdCode;
     
     @Column(name = "hmv")

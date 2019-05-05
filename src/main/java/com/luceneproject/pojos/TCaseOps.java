@@ -71,7 +71,7 @@ public class TCaseOps implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "opsc_code")
-        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.NO)
+        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private String opscCode;
     
     

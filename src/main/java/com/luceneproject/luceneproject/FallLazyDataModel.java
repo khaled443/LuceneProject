@@ -39,6 +39,9 @@ public class FallLazyDataModel extends LazyDataModel<Fall> {
             }
             System.out.println("****************");
 
+            }else if(filters.size()==0){
+                System.out.println("empty?");
+                System.out.println(filters.size());
             }
             return list;
         }
