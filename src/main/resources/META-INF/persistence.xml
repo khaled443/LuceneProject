@@ -35,7 +35,9 @@
       <property name="javax.persistence.jdbc.password" value="oracle"/>
     
             -->
-            
+            <!--  The internal connection pool has reached its maximum size and no connection is currently available! -->
+            <property name="connection.pool_size" value="100"/>
+
             <!-- connection to PostgreSql -->
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=khdb"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>

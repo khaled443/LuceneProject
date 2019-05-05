@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -28,7 +29,7 @@ public enum DataService {
     private final EntityManagerFactory emf
             = Persistence.createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
 
-    public List<Fall> getFallsList(int start, int size) {
+    public List<Fall> getFallsList(int start, int size,  Map<String, Object> filters) {
         List<Fall> falls = new ArrayList<Fall>();
 
         EntityManager em = emf.createEntityManager();
@@ -72,7 +73,7 @@ public enum DataService {
             fall.setAdmisstion_date(admisstion_date);
 
             falls.add(fall);
-
+            
         }
         return falls;
     }

@@ -55,7 +55,7 @@
                 </p:column>
 
                 <!-- Column -->    
-                <p:column id="cs_hospital_ident" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.cs_case_number}"  >
+                <p:column id="cs_hospital_ident" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.cs_hospital_ident}"  >
                     <f:facet name="footer"  >
                         <h:outputText value="tcase.cs_hospital_ident" />
                         <p:tooltip value="Identifikationsnummer des Krankenhauses, das den Fall bearbeitet. Weitere Informationen in der Tabelle CPX_common.C_HOSPITAL (HOS_IDENT)" for="cs_hospital_ident" />
@@ -64,10 +64,10 @@
                     <f:facet name="header" >
                         <h:outputText value="Identifikationsnumme des Krankenhauses"  />
                         <br/>                     
-                        <h:form>
+<!--                        <h:form>
                             <h:inputText  value="#{dtFilterView.csCaseNumber}"/>
                             <h:commandButton action="#{dtFilterView.createMoreCars()}" style="display:none;" value="submit"/>
-                        </h:form>
+                        </h:form>-->
 
 
                     </f:facet>
@@ -85,9 +85,9 @@
                     <f:facet name="header">
                         <h:outputText value="Identifikator der Versicherung" />
                         <br/>                     
-                        <h:inputText >
+<!--                        <h:inputText >
                             <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>
+                        </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_identifier}" />
                 </p:column>
@@ -101,9 +101,9 @@
                     <f:facet name="header">
                         <h:outputText value="Versicherungsnummer des Patienten" />
                         <br/>                     
-                        <h:inputText >
+<!--                        <h:inputText >
                             <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>
+                        </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_identifier_patient}" />
                 </p:column>
@@ -117,9 +117,9 @@
                     <f:facet name="header">
                         <h:outputText value="Versicherungsnummer des Patienten" />
                         <br/>                     
-                        <h:inputText >
+<!--                        <h:inputText >
                             <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>
+                        </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.hd_icd_code}" />
                 </p:column>
@@ -133,9 +133,9 @@
                     <f:facet name="header">
                         <h:outputText value="fall beschreibung" />
                         <br/>                     
-                        <h:inputText >
+<!--                        <h:inputText >
                             <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>
+                        </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.csd_comment}" />
                 </p:column>
@@ -149,9 +149,9 @@
                     <f:facet name="header">
                         <h:outputText value="age in years" />
                         <br/>           
-                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+<!--                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
                             <f:converter converterId="javax.faces.Integer" />
-                        </p:spinner>
+                        </p:spinner>-->
 
                     </f:facet>
                     <h:outputText value="#{fall.age_years.get(0)}" />
