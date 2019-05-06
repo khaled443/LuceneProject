@@ -20,7 +20,7 @@ public class FallLazyDataModel extends LazyDataModel<Fall> {
     public FallLazyDataModel() {
         System.out.println("--------- " + this + " -----------------");
         this.setRowCount(DataService.INSTANCE.getFallsTotalCount());
-
+        
     }
 
     @Override
@@ -28,6 +28,8 @@ public class FallLazyDataModel extends LazyDataModel<Fall> {
             SortOrder sortOrder, Map<String, Object> filters) {
         List<Fall> list = DataService.INSTANCE.getFallsList(first, pageSize, filters);
         if (filters != null && filters.size() > 0) {
+            //set filterSize;
+            this.setRowCount(DataService.INSTANCE.getFilteredFallSize());
             System.out.println("yessssss i found a filter");
             System.out.println("*************");
             System.out.println("size of filter is: " + filters.size());

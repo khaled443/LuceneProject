@@ -4,7 +4,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+     >
     <h:head>
         <title>Facelet Title</title>
 
@@ -13,15 +14,20 @@
     <h:body>
 
         <h:form>
+   
+            
+            
+            
             <p:dataTable var="fall" value="#{fallData.model}" widgetVar="fallsTable"
                          lazy="true" rows="10"   paginator="true"   paginatorTemplate=
-                         "{RowsPerPageDropdown} {FirstPageLink}
-                         {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-
+                         "{RowsPerPageDropdown} 
+                         {PreviousPageLink} {PageLinks} {LastPageLink} {CurrentPageReport}"
+                         currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
                          id="t"
                          rowsPerPageTemplate="5,10,15,20,25"
-
                          emptyMessage="Es wurde keine Patientenfälle gefunden">
+                         
+
                 <f:facet name="header" >
                     <p:outputPanel>
                         <h:outputText value="Allgemeine Suche :" />
@@ -32,17 +38,17 @@
                     <p:columnToggler datasource="t" trigger="toggler"  />
                 </f:facet>
 
-
+          
 
                 <!--Column-->     
                 <p:column id="cs_case_number" style="width: 190px"  filterBy="#{fall.cs_case_number}" filterMatchMode="contains"  >
                     <f:facet name="footer"  >
                         <h:outputText value="tcase.cs_case_number" id="footerId"/>
-                        <p:tooltip value="Fallnummer in Bezug auf das Krankenhaus (Krankenhausinterne Fallnummer)" for="cs_case_number" />
+                        <p:tooltip value="Fallnummer in Bezug auf das Krankenhaus (Krankenhausinterne Fallnummer)" for="cs_case_number"  />
 
                     </f:facet>
-                    <f:facet name="header" >
-                        <h:outputText value="Fallnummer" />
+                    <f:facet name="header"  >
+                        <h:outputText value="Fallnummer"  />
                         <br/>                     
 
                         <!--                        <h:form>
@@ -64,12 +70,6 @@
                     <f:facet name="header" >
                         <h:outputText value="Identifikationsnumme des Krankenhauses"  />
                         <br/>                     
-<!--                        <h:form>
-                            <h:inputText  value="#{dtFilterView.csCaseNumber}"/>
-                            <h:commandButton action="#{dtFilterView.createMoreCars()}" style="display:none;" value="submit"/>
-                        </h:form>-->
-
-
                     </f:facet>
 
                     <h:outputText value="#{fall.cs_hospital_ident}" />
@@ -85,9 +85,9 @@
                     <f:facet name="header">
                         <h:outputText value="Identifikator der Versicherung" />
                         <br/>                     
-<!--                        <h:inputText >
-                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>-->
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_identifier}" />
                 </p:column>
@@ -101,9 +101,9 @@
                     <f:facet name="header">
                         <h:outputText value="Versicherungsnummer des Patienten" />
                         <br/>                     
-<!--                        <h:inputText >
-                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>-->
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_identifier_patient}" />
                 </p:column>
@@ -117,9 +117,9 @@
                     <f:facet name="header">
                         <h:outputText value="Versicherungsnummer des Patienten" />
                         <br/>                     
-<!--                        <h:inputText >
-                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>-->
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.hd_icd_code}" />
                 </p:column>
@@ -133,9 +133,9 @@
                     <f:facet name="header">
                         <h:outputText value="fall beschreibung" />
                         <br/>                     
-<!--                        <h:inputText >
-                            <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
-                        </h:inputText>-->
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.csd_comment}" />
                 </p:column>
@@ -149,9 +149,9 @@
                     <f:facet name="header">
                         <h:outputText value="age in years" />
                         <br/>           
-<!--                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
-                            <f:converter converterId="javax.faces.Integer" />
-                        </p:spinner>-->
+                        <!--                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+                                                    <f:converter converterId="javax.faces.Integer" />
+                                                </p:spinner>-->
 
                     </f:facet>
                     <h:outputText value="#{fall.age_years.get(0)}" />

@@ -56,6 +56,12 @@ public class FilterView  {
         return dataModel;
     }
     
+    public int getDataSize(){
+        System.out.println("this sssssssssssss " + dataModel.getRowCount());
+        return dataModel.getRowCount();
+    }
+    
+    
     
  
     
