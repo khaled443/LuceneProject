@@ -76,7 +76,7 @@
                 </p:column>
 
                 <!-- Column -->    
-                <p:column id="insurance_identifier" style="width: 190px" >
+                <p:column id="insurance_identifier" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.insurance_identifier}">
                     <f:facet name="footer"  >
                         <h:outputText value="tcase.insurance_identifier" />
                         <p:tooltip value="Identifikator (IKZ) der Versicherung für diesen Fall" for="insurance_identifier" />
@@ -93,7 +93,7 @@
                 </p:column>
 
                 <!-- Column INSURANCE_NUMBER_PATIENT -->    
-                <p:column id="insurance_number_patient" style="width: 190px" >
+                <p:column id="insurance_number_patient" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.insurance_number_patient}">
                     <f:facet name="footer"  >
                         <h:outputText value="tcase.insurance_number_patient" />
                         <p:tooltip value="Versicherungsnummer des Patienten bei der Versicherung." for="insurance_number_patient" />
@@ -105,11 +105,11 @@
                                                     <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
                                                 </h:inputText>-->
                     </f:facet>
-                    <h:outputText value="#{fall.insurance_identifier_patient}" />
+                    <h:outputText value="#{fall.insurance_number_patient}" />
                 </p:column>
 
                 <!-- Column HD_ICD_CODE -->    
-                <p:column id="hd_icd_code" style="width: 190px" >
+                <p:column id="hd_icd_code" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.hd_icd_code}">
                     <f:facet name="footer"   >
                         <h:outputText value="tcase_details.hd_icd_code" />
                         <p:tooltip value="Icd-Code der Hauptdiagnose" for="hd_icd_code" />
@@ -125,7 +125,7 @@
                 </p:column>
 
                 <!--  Column csd_comment -->
-                <p:column id="csd_comment" style="width: 190px" >
+                <p:column id="csd_comment" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.csd_comment}" >
                     <f:facet name="footer"   >
                         <h:outputText value="tcase_details.csd_comment" />
                         <p:tooltip value="Beschreibung zu dem Fall." for="csd_comment" />

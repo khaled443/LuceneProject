@@ -18,6 +18,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -32,10 +34,8 @@ public enum DataService {
     INSTANCE;
 
     List<Fall> falls = new ArrayList<Fall>();
-    int FilteredFallSize =0;
+    int FilteredFallSize = 0;
 
-  
-    
     private final EntityManagerFactory emf
             = Persistence.createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
 
@@ -56,8 +56,6 @@ public enum DataService {
         Query query = em.createQuery("Select count(*) From TCase t");
         return ((Long) query.getSingleResult()).intValue();
     }
-    
-    
 
     private List<Fall> getListFromeHibernate(int start, int size) {
 
@@ -74,7 +72,6 @@ public enum DataService {
 
         transaction.commit();
 
-        
         createFallsObjects(tcases);
         em.close();
 
@@ -84,58 +81,77 @@ public enum DataService {
     private List<Fall> getListfromLucene(int start, int size, Map<String, Object> filters) {
         System.out.println("till here ************************1***");
 
+        EntityManager em = emf.createEntityManager();
+        FullTextEntityManager fullTextEntityManager
+                = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
+        em.getTransaction().begin();
+
+        // create native Lucene query unsing the query DSL
+        // alternatively you can write the Lucene query using the Lucene query parser
+        // or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+        QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+                .buildQueryBuilder().forEntity(TCase.class).get();
+        List<org.apache.lucene.search.Query> filterQueries = new ArrayList<>();
+
+        //filters
         for (Map.Entry<String, Object> entry : filters.entrySet()) {
-            EntityManager em = emf.createEntityManager();
-            FullTextEntityManager fullTextEntityManager
-                    = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
-            em.getTransaction().begin();
+            if (entry.getKey().equals("cs_case_number") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "csCaseNumber"));
+            }
+            if (entry.getKey().equals("cs_hospital_ident") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "csHospitalIdent"));
+            }//insurance_identifier
+            if (entry.getKey().equals("insurance_identifier") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "insuranceIdentifier"));
+            }
+             if (entry.getKey().equals("insurance_number_patient") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "insuranceNumberPatient"));
+            }
+             if (entry.getKey().equals("hd_icd_code") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "tCaseDetailsCollection.hdIcdCode"));
+            } 
+             if (entry.getKey().equals("csd_comment") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "tCaseDetailsCollection.csdComment"));
+            }
 
-// create native Lucene query unsing the query DSL
-// alternatively you can write the Lucene query using the Lucene query parser
-// or the Lucene programmatic API. The Hibernate Search DSL is recommended though
-            QueryBuilder qb = fullTextEntityManager.getSearchFactory()
-                    .buildQueryBuilder().forEntity(TCase.class).get();
-            
-            org.apache.lucene.search.Query luceneQuery = qb
-                    .keyword()
-                    .wildcard()
-                    .onField("csCaseNumber")
-                    .matching(entry.getValue().toString() + "*")
-                    .createQuery();
+        }
+        BooleanQuery bq;
+        bq = new BooleanQuery();
+        if (filterQueries.size() > 0) {
+            for (org.apache.lucene.search.Query query : filterQueries) {
+                bq.add(new BooleanClause(query, BooleanClause.Occur.MUST));
+            }
 
-         
-// wrap Lucene query in a javax.persistence.Query
-            FullTextQuery  jpaQuery
-                    = fullTextEntityManager.createFullTextQuery(luceneQuery, TCase.class)
+            // wrap Lucene query in a javax.persistence.Query
+            FullTextQuery jpaQuery
+                    = fullTextEntityManager.createFullTextQuery(bq, TCase.class)
                             .setFirstResult(start)
                             .setMaxResults(size);
 
-            
             setFilteredFallSize(jpaQuery.getResultSize());
-            
-// execute search
 
+            // execute search
             List<TCase> result = jpaQuery.getResultList();
 
             createFallsObjects(result);
 
-            em.close();
         }
+
+        em.close();
 
         return falls;
     }
-    
-    private void createFallsObjects(List<TCase> tCases){
+
+    private void createFallsObjects(List<TCase> tCases) {
         falls.clear();
-        
-        
+
         for (TCase tcase : tCases) {
             //Tcase
             Fall fall = new Fall();
             fall.setCs_case_number(tcase.getCsCaseNumber());
             fall.setCs_hospital_ident(tcase.getCsHospitalIdent());
             fall.setInsurance_identifier(tcase.getInsuranceIdentifier());
-            fall.setInsurance_identifier_patient(tcase.getInsuranceNumberPatient());
+            fall.setInsurance_number_patient(tcase.getInsuranceNumberPatient());
 
             List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
 
@@ -161,13 +177,13 @@ public enum DataService {
 
         }
     }
-    
-      public int getFilteredFallSize() {
+
+    public int getFilteredFallSize() {
         return FilteredFallSize;
     }
 
     public void setFilteredFallSize(int FilteredFallSize) {
         this.FilteredFallSize = FilteredFallSize;
     }
-    
+
 }

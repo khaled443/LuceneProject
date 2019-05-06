@@ -56,7 +56,7 @@ public class FallManager {
             fall.setCs_case_number(tcase.getCsCaseNumber());
             fall.setCs_hospital_ident(tcase.getCsHospitalIdent());
             fall.setInsurance_identifier(tcase.getInsuranceIdentifier());
-            fall.setInsurance_identifier_patient(tcase.getInsuranceNumberPatient());
+            fall.setInsurance_number_patient(tcase.getInsuranceNumberPatient());
 
             List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
 

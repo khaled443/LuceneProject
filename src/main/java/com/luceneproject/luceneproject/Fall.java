@@ -20,7 +20,7 @@ public class Fall implements Serializable {
     String cs_case_number;
     String cs_hospital_ident;
     String insurance_identifier;
-    String insurance_identifier_patient;
+    String insurance_number_patient;
 
     //TCase_details
     List<String> hd_icd_code;
@@ -36,11 +36,13 @@ public class Fall implements Serializable {
         this.cs_case_number = cs_case_number;
     }
 
-    public Fall(String cs_case_number, String cs_hospital_ident, String insurance_identifier, String insurance_identifier_patient, List<String> hd_icd_code, List<String> csd_comment, List<BigInteger> age_years, List<Date> admisstion_date) {
+    public Fall(String cs_case_number, String cs_hospital_ident, String insurance_identifier, 
+            String insurance_number_patient, List<String> hd_icd_code, List<String> csd_comment,
+            List<BigInteger> age_years, List<Date> admisstion_date) {
         this.cs_case_number = cs_case_number;
         this.cs_hospital_ident = cs_hospital_ident;
         this.insurance_identifier = insurance_identifier;
-        this.insurance_identifier_patient = insurance_identifier_patient;
+        this.insurance_number_patient = insurance_number_patient;
         this.hd_icd_code = hd_icd_code;
         this.csd_comment = csd_comment;
         this.age_years = age_years;
@@ -71,12 +73,12 @@ public class Fall implements Serializable {
         this.insurance_identifier = insurance_identifier;
     }
 
-    public String getInsurance_identifier_patient() {
-        return insurance_identifier_patient;
+    public String getInsurance_number_patient() {
+        return insurance_number_patient;
     }
 
-    public void setInsurance_identifier_patient(String insurance_identifier_patient) {
-        this.insurance_identifier_patient = insurance_identifier_patient;
+    public void setInsurance_number_patient(String insurance_number_patient) {
+        this.insurance_number_patient = insurance_number_patient;
     }
 
     public List<String> getHd_icd_code() {
