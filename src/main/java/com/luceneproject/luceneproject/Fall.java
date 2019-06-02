@@ -4,17 +4,14 @@
  * and open the template in the editor.
  */
 package com.luceneproject.luceneproject;
-
-import com.luceneproject.pojo.IcdDe;
-import com.luceneproject.pojo.OpsDe;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabieh
+ * Create Fall Objects
  */
 public class Fall implements Serializable {
 

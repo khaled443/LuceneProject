@@ -17,7 +17,7 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabieh
  */
 public class QueryManager {
 

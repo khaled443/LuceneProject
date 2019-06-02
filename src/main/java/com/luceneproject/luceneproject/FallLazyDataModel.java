@@ -7,14 +7,13 @@ package com.luceneproject.luceneproject;
 
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
 import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabieh
+ * Lazy loading
  */
 public class FallLazyDataModel extends LazyDataModel<Fall> {
 
