@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,6 +13,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,6 +27,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
 /**
@@ -113,19 +117,27 @@ public class TCaseDepartment implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
+
+//tCaseIcd    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
+//    @Fetch(value = FetchMode.SUBSELECT)
+    @IndexedEmbedded
+    private Collection<TCaseIcd> tCaseIcdCollection;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
     private Collection<TCaseWard> tCaseWardCollection;
+
+//tCaseOps    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
+//    @Fetch(value = FetchMode.SUBSELECT)
+    @IndexedEmbedded
+    private Collection<TCaseOps> tCaseOpsCollection;
+
+//tCaseDetails    
     @JoinColumn(name = "t_case_details_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @ContainedIn
     private TCaseDetails tCaseDetailsId;
-    
-    @IndexedEmbedded
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
-    private Collection<TCaseIcd> tCaseIcdCollection;
-   
-    @IndexedEmbedded
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDepartmentId")
-    private Collection<TCaseOps> tCaseOpsCollection;
 
     public TCaseDepartment() {
     }
@@ -268,23 +280,6 @@ public class TCaseDepartment implements Serializable {
     }
 
     @XmlTransient
-    public Collection<TCaseWard> getTCaseWardCollection() {
-        return tCaseWardCollection;
-    }
-
-    public void setTCaseWardCollection(Collection<TCaseWard> tCaseWardCollection) {
-        this.tCaseWardCollection = tCaseWardCollection;
-    }
-
-    public TCaseDetails getTCaseDetailsId() {
-        return tCaseDetailsId;
-    }
-
-    public void setTCaseDetailsId(TCaseDetails tCaseDetailsId) {
-        this.tCaseDetailsId = tCaseDetailsId;
-    }
-
-    @XmlTransient
     public Collection<TCaseIcd> getTCaseIcdCollection() {
         return tCaseIcdCollection;
     }
@@ -294,12 +289,29 @@ public class TCaseDepartment implements Serializable {
     }
 
     @XmlTransient
+    public Collection<TCaseWard> getTCaseWardCollection() {
+        return tCaseWardCollection;
+    }
+
+    public void setTCaseWardCollection(Collection<TCaseWard> tCaseWardCollection) {
+        this.tCaseWardCollection = tCaseWardCollection;
+    }
+
+    @XmlTransient
     public Collection<TCaseOps> getTCaseOpsCollection() {
         return tCaseOpsCollection;
     }
 
     public void setTCaseOpsCollection(Collection<TCaseOps> tCaseOpsCollection) {
         this.tCaseOpsCollection = tCaseOpsCollection;
+    }
+
+    public TCaseDetails getTCaseDetailsId() {
+        return tCaseDetailsId;
+    }
+
+    public void setTCaseDetailsId(TCaseDetails tCaseDetailsId) {
+        this.tCaseDetailsId = tCaseDetailsId;
     }
 
     @Override
@@ -324,7 +336,7 @@ public class TCaseDepartment implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TCaseDepartment[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseDepartment[ id=" + id + " ]";
     }
-    
+
 }

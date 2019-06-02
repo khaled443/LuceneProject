@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,10 +27,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.NumericField;
+import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Store;
 
 /**
@@ -73,7 +80,9 @@ import org.hibernate.search.annotations.Store;
     , @NamedQuery(name = "TCaseDetails.findBySumOfOps", query = "SELECT t FROM TCaseDetails t WHERE t.sumOfOps = :sumOfOps")
     , @NamedQuery(name = "TCaseDetails.findByTransferringHospIdent", query = "SELECT t FROM TCaseDetails t WHERE t.transferringHospIdent = :transferringHospIdent")
     , @NamedQuery(name = "TCaseDetails.findByVersion", query = "SELECT t FROM TCaseDetails t WHERE t.version = :version")
-    , @NamedQuery(name = "TCaseDetails.findByVersionNumber", query = "SELECT t FROM TCaseDetails t WHERE t.versionNumber = :versionNumber")})
+    , @NamedQuery(name = "TCaseDetails.findByVersionNumber", query = "SELECT t FROM TCaseDetails t WHERE t.versionNumber = :versionNumber")
+    , @NamedQuery(name = "TCaseDetails.findByCancelDate", query = "SELECT t FROM TCaseDetails t WHERE t.cancelDate = :cancelDate")
+    , @NamedQuery(name = "TCaseDetails.findByCancelReasonEn", query = "SELECT t FROM TCaseDetails t WHERE t.cancelReasonEn = :cancelReasonEn")})
 public class TCaseDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,12 +102,13 @@ public class TCaseDetails implements Serializable {
     @Column(name = "admission_cause_en")
     private String admissionCauseEn;
     
-    
+//admissionDate
     @Basic(optional = false)
     @NotNull
     @Column(name = "admission_date")
     @Temporal(TemporalType.TIMESTAMP)
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
+    @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
+    @DateBridge(resolution = Resolution.DAY)
     private Date admissionDate;
     
     
@@ -122,16 +132,18 @@ public class TCaseDetails implements Serializable {
     @Column(name = "admission_reason_34_en")
     private String admissionReason34En;
     @Column(name = "admission_weight")
-    private BigInteger admissionWeight;
+    private BigDecimal admissionWeight;
     @Basic(optional = false)
     @NotNull
     @Column(name = "age_days")
     private long ageDays;
     
-    
+//ageYears
+    @Field(index = Index.YES, store = Store.YES)
+    @NumericField
     @Column(name = "age_years")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
-    private BigInteger ageYears;
+    private int ageYears;
+    
     
     
     @Column(name = "creation_date")
@@ -139,14 +151,9 @@ public class TCaseDetails implements Serializable {
     private Date creationDate;
     @Column(name = "creation_user")
     private BigDecimal creationUser;
-    
-    
     @Size(max = 255)
     @Column(name = "csd_comment")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
     private String csdComment;
-    
-    
     @Column(name = "date_of_accident")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateOfAccident;
@@ -160,14 +167,17 @@ public class TCaseDetails implements Serializable {
     @Column(name = "discharge_reason_3_en")
     private String dischargeReason3En;
     
-    
+//hd_icd_code
     @Size(max = 255)
     @Column(name = "hd_icd_code")
-    @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.YES
+    ,analyzer = @Analyzer(definition = "CustomAutocompleteAnalyzer")
+    )             
     private String hdIcdCode;
     
+    
     @Column(name = "hmv")
-    private BigInteger hmv;
+    private BigDecimal hmv;
     @Basic(optional = false)
     @NotNull
     @Column(name = "leave")
@@ -194,9 +204,9 @@ public class TCaseDetails implements Serializable {
     @Column(name = "modification_user")
     private BigDecimal modificationUser;
     @Column(name = "sum_of_icd")
-    private BigInteger sumOfIcd;
+    private BigDecimal sumOfIcd;
     @Column(name = "sum_of_ops")
-    private BigInteger sumOfOps;
+    private BigDecimal sumOfOps;
     @Size(max = 255)
     @Column(name = "transferring_hosp_ident")
     private String transferringHospIdent;
@@ -208,22 +218,35 @@ public class TCaseDetails implements Serializable {
     @NotNull
     @Column(name = "version_number")
     private long versionNumber;
+    @Column(name = "cancel_date")
+    @Temporal(TemporalType.DATE)
+    private Date cancelDate;
+    @Column(name = "cancel_reason_en")
+    @Temporal(TemporalType.DATE)
+    private Date cancelReasonEn;
+    
+//TCASE    
     @JoinColumn(name = "t_case_id", referencedColumnName = "id")
     @ManyToOne
+    @ContainedIn
     private TCase tCaseId;
-    @OneToMany(mappedBy = "externId")
-    private Collection<TCaseDetails> tCaseDetailsCollection;
-    @JoinColumn(name = "extern_id", referencedColumnName = "id")
-    @ManyToOne
-    private TCaseDetails externId;
+    
+    
     @OneToMany(mappedBy = "parentId")
-    private Collection<TCaseDetails> tCaseDetailsCollection1;
+    private Collection<TCaseDetails> tCaseDetailsCollection;
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne
     private TCaseDetails parentId;
+    @OneToMany(mappedBy = "externId")
+    private Collection<TCaseDetails> tCaseDetailsCollection1;
+    @JoinColumn(name = "extern_id", referencedColumnName = "id")
+    @ManyToOne
+    private TCaseDetails externId;
     
+//tCaseDepartmentCollection    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDetailsId" ,fetch = FetchType.EAGER)
+//    @Fetch(value = FetchMode.SUBSELECT)
     @IndexedEmbedded
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tCaseDetailsId")
     private Collection<TCaseDepartment> tCaseDepartmentCollection;
 
     public TCaseDetails() {
@@ -316,11 +339,11 @@ public class TCaseDetails implements Serializable {
         this.admissionReason34En = admissionReason34En;
     }
 
-    public BigInteger getAdmissionWeight() {
+    public BigDecimal getAdmissionWeight() {
         return admissionWeight;
     }
 
-    public void setAdmissionWeight(BigInteger admissionWeight) {
+    public void setAdmissionWeight(BigDecimal admissionWeight) {
         this.admissionWeight = admissionWeight;
     }
 
@@ -332,11 +355,11 @@ public class TCaseDetails implements Serializable {
         this.ageDays = ageDays;
     }
 
-    public BigInteger getAgeYears() {
+    public int getAgeYears() {
         return ageYears;
     }
 
-    public void setAgeYears(BigInteger ageYears) {
+    public void setAgeYears(int ageYears) {
         this.ageYears = ageYears;
     }
 
@@ -404,11 +427,11 @@ public class TCaseDetails implements Serializable {
         this.hdIcdCode = hdIcdCode;
     }
 
-    public BigInteger getHmv() {
+    public BigDecimal getHmv() {
         return hmv;
     }
 
-    public void setHmv(BigInteger hmv) {
+    public void setHmv(BigDecimal hmv) {
         this.hmv = hmv;
     }
 
@@ -468,19 +491,19 @@ public class TCaseDetails implements Serializable {
         this.modificationUser = modificationUser;
     }
 
-    public BigInteger getSumOfIcd() {
+    public BigDecimal getSumOfIcd() {
         return sumOfIcd;
     }
 
-    public void setSumOfIcd(BigInteger sumOfIcd) {
+    public void setSumOfIcd(BigDecimal sumOfIcd) {
         this.sumOfIcd = sumOfIcd;
     }
 
-    public BigInteger getSumOfOps() {
+    public BigDecimal getSumOfOps() {
         return sumOfOps;
     }
 
-    public void setSumOfOps(BigInteger sumOfOps) {
+    public void setSumOfOps(BigDecimal sumOfOps) {
         this.sumOfOps = sumOfOps;
     }
 
@@ -508,6 +531,22 @@ public class TCaseDetails implements Serializable {
         this.versionNumber = versionNumber;
     }
 
+    public Date getCancelDate() {
+        return cancelDate;
+    }
+
+    public void setCancelDate(Date cancelDate) {
+        this.cancelDate = cancelDate;
+    }
+
+    public Date getCancelReasonEn() {
+        return cancelReasonEn;
+    }
+
+    public void setCancelReasonEn(Date cancelReasonEn) {
+        this.cancelReasonEn = cancelReasonEn;
+    }
+
     public TCase getTCaseId() {
         return tCaseId;
     }
@@ -525,12 +564,12 @@ public class TCaseDetails implements Serializable {
         this.tCaseDetailsCollection = tCaseDetailsCollection;
     }
 
-    public TCaseDetails getExternId() {
-        return externId;
+    public TCaseDetails getParentId() {
+        return parentId;
     }
 
-    public void setExternId(TCaseDetails externId) {
-        this.externId = externId;
+    public void setParentId(TCaseDetails parentId) {
+        this.parentId = parentId;
     }
 
     @XmlTransient
@@ -542,12 +581,12 @@ public class TCaseDetails implements Serializable {
         this.tCaseDetailsCollection1 = tCaseDetailsCollection1;
     }
 
-    public TCaseDetails getParentId() {
-        return parentId;
+    public TCaseDetails getExternId() {
+        return externId;
     }
 
-    public void setParentId(TCaseDetails parentId) {
-        this.parentId = parentId;
+    public void setExternId(TCaseDetails externId) {
+        this.externId = externId;
     }
 
     @XmlTransient
@@ -581,7 +620,7 @@ public class TCaseDetails implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TCaseDetails[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseDetails[ id=" + id + " ]";
     }
     
 }

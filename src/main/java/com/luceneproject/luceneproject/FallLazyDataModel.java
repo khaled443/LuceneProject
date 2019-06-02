@@ -7,6 +7,7 @@ package com.luceneproject.luceneproject;
 
 import java.util.List;
 import java.util.Map;
+import javax.persistence.EntityManager;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
@@ -17,17 +18,17 @@ import org.primefaces.model.SortOrder;
  */
 public class FallLazyDataModel extends LazyDataModel<Fall> {
 
+    
     public FallLazyDataModel() {
         System.out.println("--------- " + this + " -----------------");
         this.setRowCount(DataService.INSTANCE.getFallsTotalCount());
-        
     }
 
     @Override
     public List<Fall> load(int first, int pageSize, String sortField,
             SortOrder sortOrder, Map<String, Object> filters) {
         List<Fall> list = DataService.INSTANCE.getFallsList(first, pageSize, filters);
-        if (filters != null && filters.size() > 0) {
+        if (filters.size() > 0) {
             //set filterSize;
             this.setRowCount(DataService.INSTANCE.getFilteredFallSize());
             System.out.println("yessssss i found a filter");

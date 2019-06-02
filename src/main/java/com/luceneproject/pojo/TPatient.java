@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,6 +23,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
 
 /**
  *
@@ -68,17 +73,29 @@ public class TPatient implements Serializable {
     @Column(name = "pat_date_of_birth")
     @Temporal(TemporalType.TIMESTAMP)
     private Date patDateOfBirth;
+    
+//parFirstName
     @Size(max = 255)
     @Column(name = "pat_first_name")
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO,
+            analyzer = @Analyzer(definition = "CustomNameAnalyzer"))    
     private String patFirstName;
+    
+    
     @Size(max = 255)
     @Column(name = "pat_gender_en")
     private String patGenderEn;
+
+//patNumber    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "pat_number")
+        @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO,
+            analyzer = @Analyzer(definition = "CustomAutocompleteAnalyzer")
+    )
     private String patNumber;
+    
     @Size(max = 255)
     @Column(name = "pat_sec_name")
     private String patSecName;
@@ -89,12 +106,11 @@ public class TPatient implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
+ 
+//Tcase    
     @OneToMany(mappedBy = "tPatientId")
+    @ContainedIn
     private Collection<TCase> tCaseCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tPatientId")
-    private Collection<TPatientDetails> tPatientDetailsCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tPatientId")
-    private Collection<TWmProcess> tWmProcessCollection;
 
     public TPatient() {
     }
@@ -214,24 +230,6 @@ public class TPatient implements Serializable {
         this.tCaseCollection = tCaseCollection;
     }
 
-    @XmlTransient
-    public Collection<TPatientDetails> getTPatientDetailsCollection() {
-        return tPatientDetailsCollection;
-    }
-
-    public void setTPatientDetailsCollection(Collection<TPatientDetails> tPatientDetailsCollection) {
-        this.tPatientDetailsCollection = tPatientDetailsCollection;
-    }
-
-    @XmlTransient
-    public Collection<TWmProcess> getTWmProcessCollection() {
-        return tWmProcessCollection;
-    }
-
-    public void setTWmProcessCollection(Collection<TWmProcess> tWmProcessCollection) {
-        this.tWmProcessCollection = tWmProcessCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -254,7 +252,7 @@ public class TPatient implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TPatient[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TPatient[ id=" + id + " ]";
     }
     
 }

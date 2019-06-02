@@ -6,7 +6,7 @@
 package com.luceneproject.Search;
 
 import com.luceneproject.Search.Interfaces.*;
-import com.luceneproject.pojos.*;
+import com.luceneproject.pojo.*;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

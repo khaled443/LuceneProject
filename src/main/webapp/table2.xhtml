@@ -5,28 +5,26 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-     >
+      >
     <h:head>
         <title>Facelet Title</title>
 
         <h:outputStylesheet name="style.css" library="css" />
     </h:head>
     <h:body>
-
         <h:form>
-   
-            
-            
-            
+
             <p:dataTable var="fall" value="#{fallData.model}" widgetVar="fallsTable"
                          lazy="true" rows="10"   paginator="true"   paginatorTemplate=
                          "{RowsPerPageDropdown} 
                          {PreviousPageLink} {PageLinks} {LastPageLink} {CurrentPageReport}"
                          currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
                          id="t"
+
+
                          rowsPerPageTemplate="5,10,15,20,25"
-                         emptyMessage="Es wurde keine Patientenfälle gefunden">
-                         
+                         emptyMessage="Es wurde keine Patientenfälle gefunden" style=" width: fit-content; height: fit-content; table-layout: fixed;">
+
 
                 <f:facet name="header" >
                     <p:outputPanel>
@@ -38,7 +36,7 @@
                     <p:columnToggler datasource="t" trigger="toggler"  />
                 </f:facet>
 
-          
+
 
                 <!--Column-->     
                 <p:column id="cs_case_number" style="width: 190px"  filterBy="#{fall.cs_case_number}" filterMatchMode="contains"  >
@@ -60,20 +58,6 @@
                     <h:outputText value="#{fall.cs_case_number}" />
                 </p:column>
 
-                <!-- Column -->    
-                <p:column id="cs_hospital_ident" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.cs_hospital_ident}"  >
-                    <f:facet name="footer"  >
-                        <h:outputText value="tcase.cs_hospital_ident" />
-                        <p:tooltip value="Identifikationsnummer des Krankenhauses, das den Fall bearbeitet. Weitere Informationen in der Tabelle CPX_common.C_HOSPITAL (HOS_IDENT)" for="cs_hospital_ident" />
-
-                    </f:facet>
-                    <f:facet name="header" >
-                        <h:outputText value="Identifikationsnumme des Krankenhauses"  />
-                        <br/>                     
-                    </f:facet>
-
-                    <h:outputText value="#{fall.cs_hospital_ident}" />
-                </p:column>
 
                 <!-- Column -->    
                 <p:column id="insurance_identifier" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.insurance_identifier}">
@@ -115,7 +99,7 @@
                         <p:tooltip value="Icd-Code der Hauptdiagnose" for="hd_icd_code" />
                     </f:facet>
                     <f:facet name="header">
-                        <h:outputText value="Versicherungsnummer des Patienten" />
+                        <h:outputText value="Patient Hauptdiagnose" />
                         <br/>                     
                         <!--                        <h:inputText >
                                                     <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
@@ -124,48 +108,128 @@
                     <h:outputText value="#{fall.hd_icd_code}" />
                 </p:column>
 
-                <!--  Column csd_comment -->
-                <p:column id="csd_comment" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.csd_comment}" >
+
+
+                <!--  Column AGE_YEARS -->
+                <p:column id="age_years" style="width: 190px" filterMatchMode="in"  filterBy="#{Integer.parseInt(fall.age_years)}"  >
                     <f:facet name="footer"   >
-                        <h:outputText value="tcase_details.csd_comment" />
-                        <p:tooltip value="Beschreibung zu dem Fall." for="csd_comment" />
+                        <h:outputText value="tcase_details.age_years" />
+                        <p:tooltip value="Alter der Patient" for="age_years" />
                     </f:facet>
                     <f:facet name="header">
-                        <h:outputText value="fall beschreibung" />
+                        <h:outputText value="Alter in Jahre" />
+                        <br/>        
+                    </f:facet>
+                    <h:outputText value="#{fall.age_years}" />
+                </p:column>
+
+
+                <!-- Column admission_date -->    
+                <p:column id="admission_date" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.admission_date}" >
+                    <f:facet name="footer"   >
+                        <h:outputText value="tcase_details.admission_date" />
+                        <p:tooltip value="BehandlungsDatum im Krankenhaus" for="admission_date" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="BehandlungsDatum" />
+                        <br/>                     
+                    </f:facet>
+                    <h:outputText value="#{fall.admisstion_date}" />
+                </p:column>
+
+                <!-- pat_number -->
+                <p:column id="pat_number" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.pat_number}">
+                    <f:facet name="footer"   >
+                        <h:outputText value="T_Patient.pat_number" />
+                        <p:tooltip value="Identifikationsnummer des Patienten" for="pat_number" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="Identifikationsnummer" />
                         <br/>                     
                         <!--                        <h:inputText >
                                                     <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
                                                 </h:inputText>-->
                     </f:facet>
-                    <h:outputText value="#{fall.csd_comment}" />
+                    <h:outputText value="#{fall.pat_number}" />
                 </p:column>
 
-                <!--  Column AGE_YEARS -->
-                <p:column id="age_years" style="width: 190px" >
+                <!-- pat_first_name -->
+                <p:column id="pat_first_name" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.pat_first_name}">
                     <f:facet name="footer"   >
-                        <h:outputText value="tcase_details.age_years" />
-                        <p:tooltip value="age_years" for="age_years" />
+                        <h:outputText value="T_Patient.pat_first_name" />
+                        <p:tooltip value="Name des Patienten" for="pat_first_name" />
                     </f:facet>
                     <f:facet name="header">
-                        <h:outputText value="age in years" />
-                        <br/>           
-                        <!--                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
-                                                    <f:converter converterId="javax.faces.Integer" />
-                                                </p:spinner>-->
-
+                        <h:outputText value="Name" />
+                        <br/>                     
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
-                    <h:outputText value="#{fall.age_years.get(0)}" />
+                    <h:outputText value="#{fall.pat_first_name}" />
                 </p:column>
 
+                <!-- ICD -->
+                <p:column id="icdcCode" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.icdcCode}">
+                    <f:facet name="footer"   >
+                        <h:outputText value="T_Case_icd.icdcCode" />
+                        <p:tooltip value="International Classification of Diseases and Related Health Problems" for="icdcCode" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="ICD Kode" />
+                        <br/>                     
+                    </f:facet>
+                    <h:outputText value="#{fall.icdcCode}" />
+                </p:column>
+
+                <!-- OPS -->
+                <p:column id="opscCode" style="width: 190px" filterMatchMode="contains"  filterBy="#{fall.opscCode}">
+                    <f:facet name="footer"   >
+                        <h:outputText value="T_Case_ops.opscCode" />
+                        <p:tooltip value="Der Operationen- und Prozedurenschlüssel ( OPS ) ist die amtliche Klassifikation zum Verschlüsseln von Operationen, Prozeduren und allgemein medizinischen Maßnahmen." for="opscCode" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="OPS Kode" />
+                        <br/>                     
+                    </f:facet>
+                    <h:outputText value="#{fall.opscCode}" />
+                </p:column>
+
+                <!-- ICD_DESCRIPTION -->
+                <p:column id="ICD_DESCRIPTION" style="width: 500px ; max-width: 100px;" filterMatchMode="contains"  filterBy="#{fall.ICD_DESCRIPTION}" >
+                    <f:facet name="footer"   >
+                        <h:outputText value="icd_de.ICD_DESCRIPTION" />
+                        <p:tooltip value="Bescherung des ICD Codes" for="ICD_DESCRIPTION" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="ICD Bescherung" />
+                        <br/>                     
+                    </f:facet>
+                    <h:outputText value="#{fall.ICD_DESCRIPTION}" />
+                </p:column>
+
+
+                <!-- OPS_DESCRIPTION -->
+                <p:column id="OPS_DESCRIPTION" style="width: 500px" filterMatchMode="contains"  filterBy="#{fall.OPS_DESCRIPTION}">
+                    <f:facet name="footer"   >
+                        <h:outputText value="ops_de.OPS_DESCRIPTION" />
+                        <p:tooltip value="Bescherung des OPS Codes" for="OPS_DESCRIPTION" />
+                    </f:facet>
+                    <f:facet name="header">
+                        <h:outputText value="OPS Bescherung" />
+                        <br/>                     
+                    </f:facet>
+                    <h:outputText value="#{fall.OPS_DESCRIPTION}"  />
+                </p:column>
 
 <!--                <p:column filterBy="#{car.year}" headerText="Year" footerText="lte" filterMatchMode="lte">
-                    <f:facet name="filter">
-                        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
-                            <f:converter converterId="javax.faces.Integer" />
-                        </p:spinner>
-                    </f:facet>
-                    <h:outputText value="#{car.year}" />
-                </p:column>
+    <f:facet name="filter">
+        <p:spinner onchange="PF('carsTable').filter()" styleClass="year-spinner custom-filter">
+            <f:converter converterId="javax.faces.Integer" />
+        </p:spinner>
+    </f:facet>
+    <h:outputText value="#{car.year}" />
+</p:column>
                 -->
 
                 <!--
@@ -209,7 +273,6 @@
 
 
             </p:dataTable>
-
 
         </h:form>
 

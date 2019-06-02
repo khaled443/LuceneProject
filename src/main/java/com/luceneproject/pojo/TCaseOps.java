@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,8 +24,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 /**
@@ -41,7 +45,6 @@ import org.hibernate.search.annotations.Store;
     , @NamedQuery(name = "TCaseOps.findByCreationUser", query = "SELECT t FROM TCaseOps t WHERE t.creationUser = :creationUser")
     , @NamedQuery(name = "TCaseOps.findByModificationDate", query = "SELECT t FROM TCaseOps t WHERE t.modificationDate = :modificationDate")
     , @NamedQuery(name = "TCaseOps.findByModificationUser", query = "SELECT t FROM TCaseOps t WHERE t.modificationUser = :modificationUser")
-    , @NamedQuery(name = "TCaseOps.findByOpscCode", query = "SELECT t FROM TCaseOps t WHERE t.opscCode = :opscCode")
     , @NamedQuery(name = "TCaseOps.findByOpscDatum", query = "SELECT t FROM TCaseOps t WHERE t.opscDatum = :opscDatum")
     , @NamedQuery(name = "TCaseOps.findByOpscLocEn", query = "SELECT t FROM TCaseOps t WHERE t.opscLocEn = :opscLocEn")
     , @NamedQuery(name = "TCaseOps.findByToGroupFl", query = "SELECT t FROM TCaseOps t WHERE t.toGroupFl = :toGroupFl")
@@ -65,16 +68,6 @@ public class TCaseOps implements Serializable {
     private Date modificationDate;
     @Column(name = "modification_user")
     private BigDecimal modificationUser;
-    
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "opsc_code")
-        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
-    private String opscCode;
-    
-    
     @Column(name = "opsc_datum")
     @Temporal(TemporalType.TIMESTAMP)
     private Date opscDatum;
@@ -91,9 +84,20 @@ public class TCaseOps implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
+
+//opscCode    
+    @JoinColumn(name = "opsc_code", referencedColumnName = "ops_code")
+    @ManyToOne()
+    @IndexedEmbedded
+    private OpsDe opscCode;
+
+//tCaseDepartment
     @JoinColumn(name = "t_case_department_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @ContainedIn
     private TCaseDepartment tCaseDepartmentId;
+    
+    
     @JoinColumn(name = "t_case_ward_id", referencedColumnName = "id")
     @ManyToOne
     private TCaseWard tCaseWardId;
@@ -105,9 +109,8 @@ public class TCaseOps implements Serializable {
         this.id = id;
     }
 
-    public TCaseOps(BigDecimal id, String opscCode, String opscLocEn, long toGroupFl, BigDecimal version) {
+    public TCaseOps(BigDecimal id, String opscLocEn, long toGroupFl, BigDecimal version) {
         this.id = id;
-        this.opscCode = opscCode;
         this.opscLocEn = opscLocEn;
         this.toGroupFl = toGroupFl;
         this.version = version;
@@ -153,14 +156,6 @@ public class TCaseOps implements Serializable {
         this.modificationUser = modificationUser;
     }
 
-    public String getOpscCode() {
-        return opscCode;
-    }
-
-    public void setOpscCode(String opscCode) {
-        this.opscCode = opscCode;
-    }
-
     public Date getOpscDatum() {
         return opscDatum;
     }
@@ -191,6 +186,14 @@ public class TCaseOps implements Serializable {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public OpsDe getOpscCode() {
+        return opscCode;
+    }
+
+    public void setOpscCode(OpsDe opscCode) {
+        this.opscCode = opscCode;
     }
 
     public TCaseDepartment getTCaseDepartmentId() {
@@ -231,7 +234,7 @@ public class TCaseOps implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TCaseOps[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseOps[ id=" + id + " ]";
     }
     
 }

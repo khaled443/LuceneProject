@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,8 +27,11 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 /**
@@ -44,7 +47,6 @@ import org.hibernate.search.annotations.Store;
     , @NamedQuery(name = "TCaseIcd.findByCreationDate", query = "SELECT t FROM TCaseIcd t WHERE t.creationDate = :creationDate")
     , @NamedQuery(name = "TCaseIcd.findByCreationUser", query = "SELECT t FROM TCaseIcd t WHERE t.creationUser = :creationUser")
     , @NamedQuery(name = "TCaseIcd.findByIcdReferenceEn", query = "SELECT t FROM TCaseIcd t WHERE t.icdReferenceEn = :icdReferenceEn")
-    , @NamedQuery(name = "TCaseIcd.findByIcdcCode", query = "SELECT t FROM TCaseIcd t WHERE t.icdcCode = :icdcCode")
     , @NamedQuery(name = "TCaseIcd.findByIcdcLocEn", query = "SELECT t FROM TCaseIcd t WHERE t.icdcLocEn = :icdcLocEn")
     , @NamedQuery(name = "TCaseIcd.findByIcdcTypeEn", query = "SELECT t FROM TCaseIcd t WHERE t.icdcTypeEn = :icdcTypeEn")
     , @NamedQuery(name = "TCaseIcd.findByMainDiagCaseFl", query = "SELECT t FROM TCaseIcd t WHERE t.mainDiagCaseFl = :mainDiagCaseFl")
@@ -68,24 +70,14 @@ public class TCaseIcd implements Serializable {
     @Column(name = "creation_user")
     private BigDecimal creationUser;
     @Column(name = "icd_reference_en")
-    private BigInteger icdReferenceEn;
-    
-    
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "icdc_code")
-        @Field(index=Index.YES, analyze=Analyze.NO, store=Store.YES)
-    private String icdcCode;
-    
-    
+    private BigDecimal icdReferenceEn;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "icdc_loc_en")
     private String icdcLocEn;
     @Column(name = "icdc_type_en")
-    private BigInteger icdcTypeEn;
+    private BigDecimal icdcTypeEn;
     @Basic(optional = false)
     @NotNull
     @Column(name = "main_diag_case_fl")
@@ -107,9 +99,19 @@ public class TCaseIcd implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
+
+//icdcCode
+    @JoinColumn(name = "icdc_code", referencedColumnName = "icd_code")
+    @ManyToOne()
+    @IndexedEmbedded
+    private IcdDe icdcCode;
+
+//tCaseDepartment
     @JoinColumn(name = "t_case_department_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
+    @ContainedIn
     private TCaseDepartment tCaseDepartmentId;
+    
     @OneToMany(mappedBy = "tCaseIcdId")
     private Collection<TCaseIcd> tCaseIcdCollection;
     @JoinColumn(name = "t_case_icd_id", referencedColumnName = "id")
@@ -126,9 +128,8 @@ public class TCaseIcd implements Serializable {
         this.id = id;
     }
 
-    public TCaseIcd(BigDecimal id, String icdcCode, String icdcLocEn, long mainDiagCaseFl, long mainDiagDepFl, long toGroupFl, BigDecimal version) {
+    public TCaseIcd(BigDecimal id, String icdcLocEn, long mainDiagCaseFl, long mainDiagDepFl, long toGroupFl, BigDecimal version) {
         this.id = id;
-        this.icdcCode = icdcCode;
         this.icdcLocEn = icdcLocEn;
         this.mainDiagCaseFl = mainDiagCaseFl;
         this.mainDiagDepFl = mainDiagDepFl;
@@ -160,20 +161,12 @@ public class TCaseIcd implements Serializable {
         this.creationUser = creationUser;
     }
 
-    public BigInteger getIcdReferenceEn() {
+    public BigDecimal getIcdReferenceEn() {
         return icdReferenceEn;
     }
 
-    public void setIcdReferenceEn(BigInteger icdReferenceEn) {
+    public void setIcdReferenceEn(BigDecimal icdReferenceEn) {
         this.icdReferenceEn = icdReferenceEn;
-    }
-
-    public String getIcdcCode() {
-        return icdcCode;
-    }
-
-    public void setIcdcCode(String icdcCode) {
-        this.icdcCode = icdcCode;
     }
 
     public String getIcdcLocEn() {
@@ -184,11 +177,11 @@ public class TCaseIcd implements Serializable {
         this.icdcLocEn = icdcLocEn;
     }
 
-    public BigInteger getIcdcTypeEn() {
+    public BigDecimal getIcdcTypeEn() {
         return icdcTypeEn;
     }
 
-    public void setIcdcTypeEn(BigInteger icdcTypeEn) {
+    public void setIcdcTypeEn(BigDecimal icdcTypeEn) {
         this.icdcTypeEn = icdcTypeEn;
     }
 
@@ -238,6 +231,14 @@ public class TCaseIcd implements Serializable {
 
     public void setVersion(BigDecimal version) {
         this.version = version;
+    }
+
+    public IcdDe getIcdcCode() {
+        return icdcCode;
+    }
+
+    public void setIcdcCode(IcdDe icdcCode) {
+        this.icdcCode = icdcCode;
     }
 
     public TCaseDepartment getTCaseDepartmentId() {
@@ -295,7 +296,7 @@ public class TCaseIcd implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TCaseIcd[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseIcd[ id=" + id + " ]";
     }
     
 }

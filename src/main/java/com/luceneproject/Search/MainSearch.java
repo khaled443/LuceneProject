@@ -5,7 +5,7 @@
  */
 package com.luceneproject.Search;
 
-import com.luceneproject.pojos.*;
+import com.luceneproject.pojo.*;
 import java.util.List;
 import java.util.Scanner;
 

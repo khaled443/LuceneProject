@@ -5,7 +5,7 @@
  */
 package com.luceneproject.Search;
 
-import com.luceneproject.pojos.*;
+import com.luceneproject.pojo.*;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
@@ -25,6 +26,9 @@ public class DataDAO {
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
             .createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
+//
+//    @PersistenceContext(unitName = "com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU")
+//    static EntityManager em;
 
     public static List<TCase> getCaseInformation() {
         List<TCase> tcases = null;
@@ -120,18 +124,16 @@ public class DataDAO {
             System.out.println(++i);
             System.out.println("CS_CASE_NNUMBER:" + tcase.getCsCaseNumber() + " CS_HOSPITAL_IDENT: " + tcase.getCsHospitalIdent()
                     + " insurance_identifier: " + tcase.getInsuranceIdentifier() + " insurance_identifier_patient " + tcase.getInsuranceNumberPatient());
-                    
+
             //TCaseDetails
             List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
             for (TCaseDetails tcaseDestailse : tcaseDestailses) {
                 System.out.println("        #####TCASE_DETAILS######");
-                System.out.println("        HD_ICD_CODE "+ tcaseDestailse.getHdIcdCode());
+                System.out.println("        HD_ICD_CODE " + tcaseDestailse.getHdIcdCode());
                 System.out.println("");
-                
-            }
-       
 
-            
+            }
+
         }
         ENTITY_MANAGER_FACTORY.close();
 

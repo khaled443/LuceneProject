@@ -7,12 +7,13 @@ package com.luceneproject.luceneproject;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import com.luceneproject.pojos.*;
+import com.luceneproject.pojo.*;
 import com.sun.media.jfxmedia.logging.Logger;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -54,16 +55,15 @@ public class FallManager {
             //Tcase
             Fall fall = new Fall();
             fall.setCs_case_number(tcase.getCsCaseNumber());
-            fall.setCs_hospital_ident(tcase.getCsHospitalIdent());
             fall.setInsurance_identifier(tcase.getInsuranceIdentifier());
             fall.setInsurance_number_patient(tcase.getInsuranceNumberPatient());
 
             List<TCaseDetails> tcaseDestailses = (List<TCaseDetails>) tcase.getTCaseDetailsCollection();
 
-            List<String> hdIcdCode = new ArrayList<String>();
-            List<String> csd_comment = new ArrayList<String>();
-            List<BigInteger> age_years = new ArrayList<BigInteger>();
-            List<Date> admisstion_date = new ArrayList<Date>();
+            LinkedHashSet<String> hdIcdCode = new LinkedHashSet<String>();
+            LinkedHashSet<String> csd_comment = new LinkedHashSet<String>();
+            LinkedHashSet<Integer> age_years = new LinkedHashSet<Integer>();
+            LinkedHashSet<Date> admisstion_date = new LinkedHashSet<Date>();
 
             for (TCaseDetails tcaseDestailse : tcaseDestailses) {
                 hdIcdCode.add(tcaseDestailse.getHdIcdCode());
@@ -74,7 +74,6 @@ public class FallManager {
             }
             
             fall.setHd_icd_code(hdIcdCode);
-            fall.setCsd_comment(csd_comment);
             fall.setAge_years(age_years);
             fall.setAdmisstion_date(admisstion_date);
             

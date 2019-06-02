@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-   <persistence-unit name="com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+  <persistence-unit name="com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU" >
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>com.luceneproject.hibernate.pojos.TCaseIcd</class>
-    <class>com.luceneproject.hibernate.pojos.TWmRequestBege</class>
-    <class>com.luceneproject.hibernate.pojos.TWmRequestAudit</class>
-    <class>com.luceneproject.hibernate.pojos.TWmReminder</class>
-    <class>com.luceneproject.hibernate.pojos.TCase</class>
-    <class>com.luceneproject.hibernate.pojos.TCaseOps</class>
-    <class>com.luceneproject.hibernate.pojos.TWmDocument</class>
-    <class>com.luceneproject.hibernate.pojos.TWmRequest</class>
-    <class>com.luceneproject.hibernate.pojos.TWmProcess</class>
-    <class>com.luceneproject.hibernate.pojos.TWmProcessHospital</class>
-    <class>com.luceneproject.hibernate.pojos.TWmAction</class>
-    <class>com.luceneproject.hibernate.pojos.TWmEvent</class>
-    <class>com.luceneproject.hibernate.pojos.TCaseDepartment</class>
-    <class>com.luceneproject.hibernate.pojos.TCaseDetails</class>
-    <class>com.luceneproject.hibernate.pojos.TP301KainInka</class>
-    <class>com.luceneproject.hibernate.pojos.TP301KainInkaPvv</class>
-    <class>com.luceneproject.hibernate.pojos.TWmRequestMdk</class>
-    <class>com.luceneproject.hibernate.pojos.TPatient</class>
-    <class>com.luceneproject.hibernate.pojos.TWmProcessInsurance</class>
-    <class>com.luceneproject.hibernate.pojos.TCaseWard</class>
-    <class>com.luceneproject.hibernate.pojos.TP301KainInkaPvt</class>
-    <class>com.luceneproject.hibernate.pojos.TWmProcessHospitalFinalis</class>
-    <class>com.luceneproject.hibernate.pojos.TPatientDetails</class>
-    <class>com.luceneproject.hibernate.pojos.TWmRequestInsurance</class>
-    
+    <class>com.luceneproject.hibernate.pojo.TCaseIcd</class>
+    <class>com.luceneproject.hibernate.pojo.TCase</class>
+    <class>com.luceneproject.hibernate.pojo.TCaseOps</class>
+    <class>com.luceneproject.hibernate.pojo.TCaseDepartment</class>
+    <class>com.luceneproject.hibernate.pojo.TCaseDetails</class>
+    <class>com.luceneproject.hibernate.pojo.TPatient</class>
+    <class>com.luceneproject.hibernate.pojo.TCaseWard</class>
+    <class>com.luceneproject.hibernate.pojo.IcdDe</class>
+    <class>com.luceneproject.hibernate.pojo.OpsDe</class>
+
     <properties>
       <!--connection to Oracle
 
@@ -37,17 +22,16 @@
     
             -->
             <!--  The internal connection pool has reached its maximum size and no connection is currently available! -->
-<!--            <property name="connection.pool_size" value="100"/>-->
-
+            <!--            <property name="connection.pool_size" value="100"/>-->
             <!-- connection to PostgreSql -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=khdb"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=khdb2"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.password" value="admin"/>
             <!-- temp show sql Querys  -->
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
-            <!-- create tables 
+            <!-- create tables  
             <property name="hibernate.hbm2ddl.auto" value="create"/>
             -->
             <!-- store Hypernate Search Indexes in Filesystem  -->
@@ -64,7 +48,17 @@
             <property name="hibernate.search.generate_statistics" value="true"/>
             <property name="hibernate.search.jmx_enabled" value="true"/>
             <property name="org.hibernate.search.batchindexing.impl" value="true"/>
-                
+            
+            <!-- jta? -->
+            <property name="hibernate.transaction.jta.platform"
+                          value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform" /> 
         </properties>
     </persistence-unit>
+    <!--    <persistence-unit name="com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU2" transaction-type="JTA">
+        <jta-data-source>com.luceneproject.pojo</jta-data-source>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+        </properties>
+    </persistence-unit>-->
 </persistence>

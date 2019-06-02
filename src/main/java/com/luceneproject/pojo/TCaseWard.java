@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojos;
+package com.luceneproject.pojo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -31,19 +31,20 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author kk
  */
 @Entity
-@Table(name = "t_wm_action")
+@Table(name = "t_case_ward")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TWmAction.findAll", query = "SELECT t FROM TWmAction t")
-    , @NamedQuery(name = "TWmAction.findById", query = "SELECT t FROM TWmAction t WHERE t.id = :id")
-    , @NamedQuery(name = "TWmAction.findByActionComment", query = "SELECT t FROM TWmAction t WHERE t.actionComment = :actionComment")
-    , @NamedQuery(name = "TWmAction.findByActionSubjectId", query = "SELECT t FROM TWmAction t WHERE t.actionSubjectId = :actionSubjectId")
-    , @NamedQuery(name = "TWmAction.findByCreationDate", query = "SELECT t FROM TWmAction t WHERE t.creationDate = :creationDate")
-    , @NamedQuery(name = "TWmAction.findByCreationUser", query = "SELECT t FROM TWmAction t WHERE t.creationUser = :creationUser")
-    , @NamedQuery(name = "TWmAction.findByModificationDate", query = "SELECT t FROM TWmAction t WHERE t.modificationDate = :modificationDate")
-    , @NamedQuery(name = "TWmAction.findByModificationUser", query = "SELECT t FROM TWmAction t WHERE t.modificationUser = :modificationUser")
-    , @NamedQuery(name = "TWmAction.findByVersion", query = "SELECT t FROM TWmAction t WHERE t.version = :version")})
-public class TWmAction implements Serializable {
+    @NamedQuery(name = "TCaseWard.findAll", query = "SELECT t FROM TCaseWard t")
+    , @NamedQuery(name = "TCaseWard.findById", query = "SELECT t FROM TCaseWard t WHERE t.id = :id")
+    , @NamedQuery(name = "TCaseWard.findByCreationDate", query = "SELECT t FROM TCaseWard t WHERE t.creationDate = :creationDate")
+    , @NamedQuery(name = "TCaseWard.findByCreationUser", query = "SELECT t FROM TCaseWard t WHERE t.creationUser = :creationUser")
+    , @NamedQuery(name = "TCaseWard.findByModificationDate", query = "SELECT t FROM TCaseWard t WHERE t.modificationDate = :modificationDate")
+    , @NamedQuery(name = "TCaseWard.findByModificationUser", query = "SELECT t FROM TCaseWard t WHERE t.modificationUser = :modificationUser")
+    , @NamedQuery(name = "TCaseWard.findByVersion", query = "SELECT t FROM TCaseWard t WHERE t.version = :version")
+    , @NamedQuery(name = "TCaseWard.findByWardcAdmdate", query = "SELECT t FROM TCaseWard t WHERE t.wardcAdmdate = :wardcAdmdate")
+    , @NamedQuery(name = "TCaseWard.findByWardcDisdate", query = "SELECT t FROM TCaseWard t WHERE t.wardcDisdate = :wardcDisdate")
+    , @NamedQuery(name = "TCaseWard.findByWardcIdent", query = "SELECT t FROM TCaseWard t WHERE t.wardcIdent = :wardcIdent")})
+public class TCaseWard implements Serializable {
 
     private static final long serialVersionUID = 1L;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -52,13 +53,6 @@ public class TWmAction implements Serializable {
     @NotNull
     @Column(name = "id")
     private BigDecimal id;
-    @Size(max = 2147483647)
-    @Column(name = "action_comment")
-    private String actionComment;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "action_subject_id")
-    private BigDecimal actionSubjectId;
     @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -73,22 +67,32 @@ public class TWmAction implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
-    @JoinColumn(name = "t_wm_process_id", referencedColumnName = "id")
+    @Column(name = "wardc_admdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date wardcAdmdate;
+    @Column(name = "wardc_disdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date wardcDisdate;
+    @Size(max = 255)
+    @Column(name = "wardc_ident")
+    private String wardcIdent;
+    @OneToMany(mappedBy = "tCaseWardId")
+    private Collection<TCaseIcd> tCaseIcdCollection;
+    @JoinColumn(name = "t_case_department_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private TWmProcess tWmProcessId;
-    @OneToMany(mappedBy = "tWmActionId")
-    private Collection<TWmEvent> tWmEventCollection;
+    private TCaseDepartment tCaseDepartmentId;
+    @OneToMany(mappedBy = "tCaseWardId")
+    private Collection<TCaseOps> tCaseOpsCollection;
 
-    public TWmAction() {
+    public TCaseWard() {
     }
 
-    public TWmAction(BigDecimal id) {
+    public TCaseWard(BigDecimal id) {
         this.id = id;
     }
 
-    public TWmAction(BigDecimal id, BigDecimal actionSubjectId, BigDecimal version) {
+    public TCaseWard(BigDecimal id, BigDecimal version) {
         this.id = id;
-        this.actionSubjectId = actionSubjectId;
         this.version = version;
     }
 
@@ -98,22 +102,6 @@ public class TWmAction implements Serializable {
 
     public void setId(BigDecimal id) {
         this.id = id;
-    }
-
-    public String getActionComment() {
-        return actionComment;
-    }
-
-    public void setActionComment(String actionComment) {
-        this.actionComment = actionComment;
-    }
-
-    public BigDecimal getActionSubjectId() {
-        return actionSubjectId;
-    }
-
-    public void setActionSubjectId(BigDecimal actionSubjectId) {
-        this.actionSubjectId = actionSubjectId;
     }
 
     public Date getCreationDate() {
@@ -156,21 +144,54 @@ public class TWmAction implements Serializable {
         this.version = version;
     }
 
-    public TWmProcess getTWmProcessId() {
-        return tWmProcessId;
+    public Date getWardcAdmdate() {
+        return wardcAdmdate;
     }
 
-    public void setTWmProcessId(TWmProcess tWmProcessId) {
-        this.tWmProcessId = tWmProcessId;
+    public void setWardcAdmdate(Date wardcAdmdate) {
+        this.wardcAdmdate = wardcAdmdate;
+    }
+
+    public Date getWardcDisdate() {
+        return wardcDisdate;
+    }
+
+    public void setWardcDisdate(Date wardcDisdate) {
+        this.wardcDisdate = wardcDisdate;
+    }
+
+    public String getWardcIdent() {
+        return wardcIdent;
+    }
+
+    public void setWardcIdent(String wardcIdent) {
+        this.wardcIdent = wardcIdent;
     }
 
     @XmlTransient
-    public Collection<TWmEvent> getTWmEventCollection() {
-        return tWmEventCollection;
+    public Collection<TCaseIcd> getTCaseIcdCollection() {
+        return tCaseIcdCollection;
     }
 
-    public void setTWmEventCollection(Collection<TWmEvent> tWmEventCollection) {
-        this.tWmEventCollection = tWmEventCollection;
+    public void setTCaseIcdCollection(Collection<TCaseIcd> tCaseIcdCollection) {
+        this.tCaseIcdCollection = tCaseIcdCollection;
+    }
+
+    public TCaseDepartment getTCaseDepartmentId() {
+        return tCaseDepartmentId;
+    }
+
+    public void setTCaseDepartmentId(TCaseDepartment tCaseDepartmentId) {
+        this.tCaseDepartmentId = tCaseDepartmentId;
+    }
+
+    @XmlTransient
+    public Collection<TCaseOps> getTCaseOpsCollection() {
+        return tCaseOpsCollection;
+    }
+
+    public void setTCaseOpsCollection(Collection<TCaseOps> tCaseOpsCollection) {
+        this.tCaseOpsCollection = tCaseOpsCollection;
     }
 
     @Override
@@ -183,10 +204,10 @@ public class TWmAction implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TWmAction)) {
+        if (!(object instanceof TCaseWard)) {
             return false;
         }
-        TWmAction other = (TWmAction) object;
+        TCaseWard other = (TCaseWard) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -195,7 +216,7 @@ public class TWmAction implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.luceneproject.TWmAction[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseWard[ id=" + id + " ]";
     }
     
 }
