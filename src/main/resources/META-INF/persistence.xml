@@ -26,6 +26,7 @@
     <class>com.luceneproject.hibernate.pojos.TWmProcessHospitalFinalis</class>
     <class>com.luceneproject.hibernate.pojos.TPatientDetails</class>
     <class>com.luceneproject.hibernate.pojos.TWmRequestInsurance</class>
+    
     <properties>
       <!--connection to Oracle
 
