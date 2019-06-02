@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.Search;
+package com.luceneproject.Index;
 
-import com.luceneproject.Search.Interfaces.SearchInterface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -15,28 +14,21 @@ import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.hibernate.search.batchindexing.MassIndexerProgressMonitor;
-import org.hibernate.search.util.jmx.impl.JMXRegistrar;
-
 import com.luceneproject.pojo.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.hibernate.search.batchindexing.impl.SimpleIndexingProgressMonitor;
 
 /**
  * 6.3.2. Using a MassIndexer
  *
- * @author kk
+ * @author Khaled Halabieh
  *
- *
+ *Reindex all Entities
  */
 public class Index {
-
-    static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(loggg.class.getName());
-
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence
-            .createEntityManagerFactory(SearchInterface.persistenceUnitName);
+            .createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
 
     public static void main(String[] args) {
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
