@@ -6,7 +6,7 @@
     
          <application>
 	<message-bundle>
-		com.mkyong.payment_error
+		
 	</message-bundle>
      </application>
 

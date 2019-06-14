@@ -1,19 +1,13 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      >
-    <h:head>
-        <title>Facelet Title</title>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="Index.xhtml">
+    <ui:define name="source">
 
-        <h:outputStylesheet name="style.css" library="css" />
-    </h:head>
-    <h:body>
         <h:form>
-                         
+            <!--style=" width: fit-content; height: fit-content; table-layout: fixed;"-->
 
             <p:dataTable var="fall" value="#{fallData.model}" widgetVar="fallsTable"
                          lazy="true" rows="10"   paginator="true"   paginatorTemplate=
@@ -21,11 +15,14 @@
                          {PreviousPageLink} {PageLinks} {LastPageLink} {CurrentPageReport}"
                          currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
                          id="t"
-                         
-                         style=" width: fit-content; height: fit-content; table-layout: fixed;"
-                         rowsPerPageTemplate="5,10,15,20,25"
-                         emptyMessage="Es wurde keine Patientenfälle gefunden" >
+                         scrollable="true"
 
+                         reflow="true"
+                         rowIndexVar="rowIndex"
+                         scrollHeight="600"
+                         
+                         rowsPerPageTemplate="5,10,15,20,25"
+                         emptyMessage="Es wurde keine Patientenfälle gefunden" style=" width: 100%; height: 100%">
 
                 <f:facet name="header" >
                     <p:outputPanel>
@@ -263,7 +260,6 @@
             </p:dataTable>
 
         </h:form>
+    </ui:define>
 
-    </h:body>
-</html>
-
+</ui:composition>
