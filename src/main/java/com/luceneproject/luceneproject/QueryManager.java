@@ -12,35 +12,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.lucene.document.DateTools;
 import org.hibernate.search.query.dsl.QueryBuilder;
 
 /**
  *
  * @author Khaled Halabieh
- * QueryManager
  */
 public class QueryManager {
-    
-        public static org.apache.lucene.search.Query getGlobalSearch(QueryBuilder qb, Map.Entry<String, Object> entry) {
-
-        org.apache.lucene.search.Query luceneQuery = qb
-                .simpleQueryString()
-                .onField("csCaseNumber").boostedTo(3)
-                .andField("insuranceIdentifier")
-                .andField("insuranceNumberPatient")
-                .andField("tCaseDetailsCollection.hdIcdCode")
-                .andField("tPatientId.patNumber")
-                .andField("tPatientId.patFirstName")
-                .andField("tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode.icdCode")
-                .andField("tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode.icdDescription")
-                .andField("tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsCode")
-                .andField("tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsDescription")
-                .withAndAsDefaultOperator()
-                .matching(entry.getValue().toString().toLowerCase())
-                .createQuery();
-
-        return luceneQuery;
-    }
 
     public static org.apache.lucene.search.Query getStringsStartsWithQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
         org.apache.lucene.search.Query luceneQuery = qb
@@ -116,8 +95,6 @@ public class QueryManager {
                 .fuzzy()
                 .withEditDistanceUpTo(2)
                 .withPrefixLength(2)
-                        .withThreshold(.8f )
-                //        .withPrefixLength( 1 )
                 .onField(field).boostedTo(3)
                 .matching(entry.getValue().toString().toLowerCase())
                 .createQuery();

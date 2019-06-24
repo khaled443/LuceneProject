@@ -13,7 +13,6 @@
     </h:head>
     <h:body>
         <h:form>
-                         
 
             <p:dataTable var="fall" value="#{fallData.model}" widgetVar="fallsTable"
                          lazy="true" rows="10"   paginator="true"   paginatorTemplate=
@@ -21,16 +20,16 @@
                          {PreviousPageLink} {PageLinks} {LastPageLink} {CurrentPageReport}"
                          currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}"
                          id="t"
-                         
-                         style=" width: fit-content; height: fit-content; table-layout: fixed;"
+
+
                          rowsPerPageTemplate="5,10,15,20,25"
-                         emptyMessage="Es wurde keine Patientenfälle gefunden" >
+                         emptyMessage="Es wurde keine Patientenfälle gefunden" style=" width: fit-content; height: fit-content; table-layout: fixed;">
 
 
                 <f:facet name="header" >
                     <p:outputPanel>
                         <h:outputText value="Allgemeine Suche :" />
-                        <p:inputText id="globalFilter" onkeyup="PF('fallsTable').filter()" style="width:550px" placeholder="Enter keyword"/>
+                        <!--<p:inputText id="globalFilter" onkeyup="PF('carsTable').filter()" style="width:550px" placeholder="Enter keyword"/>-->
                     </p:outputPanel>
 
                     <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="pi pi-align-justify" />
@@ -49,6 +48,12 @@
                     <f:facet name="header"  >
                         <h:outputText value="Fallnummer"  />
                         <br/>                     
+
+                        <!--                        <h:form>
+                                                    <h:inputText  value="#{dtFilterView.csCaseNumber}" />
+                                                    <h:commandButton  action="#{dtFilterView.createMoreCars()}" style="display:none;" value="submit"/>
+                                                </h:form>-->
+
                     </f:facet>
                     <h:outputText value="#{fall.cs_case_number}" />
                 </p:column>
@@ -64,6 +69,9 @@
                     <f:facet name="header">
                         <h:outputText value="Identifikator der Versicherung" />
                         <br/>                     
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_identifier}" />
                 </p:column>
@@ -77,7 +85,9 @@
                     <f:facet name="header">
                         <h:outputText value="Versicherungsnummer des Patienten" />
                         <br/>                     
-
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.insurance_number_patient}" />
                 </p:column>
@@ -91,6 +101,9 @@
                     <f:facet name="header">
                         <h:outputText value="Patient Hauptdiagnose" />
                         <br/>                     
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.hd_icd_code}" />
                 </p:column>
@@ -119,16 +132,9 @@
                     </f:facet>
                     <f:facet name="header">
                         <h:outputText value="BehandlungsDatum" />
-                        <br/>               
-
-                        <!--                        <p:calendar  pattern="dd/MM/yyyy" id="calender" >
-                                                    <p:ajax event="dateSelect"   oncomplete="PF('fallsTable').filter()"/>
-                                                </p:calendar>-->
-
+                        <br/>                     
                     </f:facet>
-                    <h:outputText value="#{fall.admisstion_date}">
-                        <!--<f:convertDateTime type="date" pattern="dd/MM/yyyy" />-->
-                    </h:outputText>
+                    <h:outputText value="#{fall.admisstion_date}" />
                 </p:column>
 
                 <!-- pat_number -->
@@ -139,7 +145,10 @@
                     </f:facet>
                     <f:facet name="header">
                         <h:outputText value="Identifikationsnummer" />
-                        <br/>                     >
+                        <br/>                     
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.pat_number}" />
                 </p:column>
@@ -153,6 +162,9 @@
                     <f:facet name="header">
                         <h:outputText value="Name" />
                         <br/>                     
+                        <!--                        <h:inputText >
+                                                    <p:ajax update="t" listener="#{dtFilterView.createMoreCars()}" />                                    
+                                                </h:inputText>-->
                     </f:facet>
                     <h:outputText value="#{fall.pat_first_name}" />
                 </p:column>

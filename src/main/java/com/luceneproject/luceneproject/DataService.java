@@ -41,11 +41,10 @@ public enum DataService {
 
         List<Fall> falls = new ArrayList<Fall>();
         long startTime = System.currentTimeMillis();
-        if ((filters != null && filters.size() > 1)|| (filters.size()==1 && !filters.get("globalFilter").equals("")) ){
-            System.out.println("yess its empty");
+
+        if (filters != null && filters.size() > 0) {
             falls = getListfromLucene(start, size, filters);
-            //if (filters.size()==1 && filters.get("globalFilter").equals(""))
-        } else  {
+        } else {
             falls = getListFromeHibernate(start, size);
 
         }
@@ -94,7 +93,7 @@ public enum DataService {
         EntityManager em = getEntityManager();
         FullTextEntityManager fullTextEntityManager
                 = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
-
+        
         // create native Lucene query unsing the query DSL
         // alternatively you can write the Lucene query using the Lucene query parser
         // or the Lucene programmatic API. The Hibernate Search DSL is recommended though
@@ -104,11 +103,6 @@ public enum DataService {
 
         //filters
         for (Map.Entry<String, Object> entry : filters.entrySet()) {
-
-            //globalFilter
-            if (entry.getKey().equals("globalFilter") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getGlobalSearch(qb, entry));
-            }
             if (entry.getKey().equals("cs_case_number") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "csCaseNumber"));
             }
@@ -123,7 +117,7 @@ public enum DataService {
             }
             if (entry.getKey().equals("parseInt(fall.age_years)") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getIntegerQuery(qb, entry, "tCaseDetailsCollection.ageYears"));
-            }
+            }//admission_date
 
             if (entry.getKey().equals("admission_date") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getDateQuery(qb, entry, "tCaseDetailsCollection.admissionDate"));
@@ -231,6 +225,7 @@ public enum DataService {
             fall.setAdmisstion_date(admisstion_date);
 
             //TPatient
+
             fall.setPat_number(tcase.getTPatientId().getPatNumber());
             fall.setPat_first_name(tcase.getTPatientId().getPatFirstName());
             fall.setIcdcCode(icds);
