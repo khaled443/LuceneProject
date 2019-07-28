@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="Index.xhtml">
+    <ui:define name="source">
+        
+        
+        <p:panel header="Alle Entitäten neu Indizieren ">  
+            <h:form>     
+                <p:growl id="message" showDetail="true" />
+                
+                
+                <p:commandButton value="Index Starten"  update="message" action="#{indexData.startIndex()}"  onclick="PF('pbAjax').start();PF('startButton2').disable();"  widgetVar="startButton2"  >
+                    <p:confirm header="Confirmation" message="Diese Funktion kann lange daueren. Sind Sie sicher dass sie alle Entites nochmal Indezieren möchten? " icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"   />
+                    <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                </p:confirmDialog>  
+                
+                <br /><br />
+                <h:outputLabel for="Size" value="Anzahl der Datenbankeinträge:"   style="font-weight: bold;font-size: 22px"/>
+                <br/>
+                
+                <h:outputLabel for="tid" value="TCase.id: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="tid" for="tid" value="#{indexData.getDocument_id()}" />
+                <br/>
+                
+                <h:outputLabel for="cs_case_number" value="TCase.cs_case_number: "   style="font-weight: bold ;font-size: 17px"/>
+                <h:outputLabel id="cs_case_number" for="cs_case_number" value="#{indexData.gettCase_cs_case_number()}" />
+                
+                <br/>
+                <h:outputLabel for="insurance_identifier" value="TCase.insurance_identifier: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="insurance_identifier" for="insurance_identifier" value="#{indexData.gettCase_insurance_identifier()}" />
+                <br/>
+                <h:outputLabel for="insurance_number_patient" value="TCase.insurance_number_patient: " style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="insurance_number_patient" for="insurance_number_patient" value="#{indexData.gettCase_insurance_number_patient()}" />
+                <br/>
+                <br/>
+                <h:outputLabel for="hd_icd_code" value="tCaseDetails.hd_icd_code: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="hd_icd_code" for="hd_icd_code" value="#{indexData.gettCaseDetails_hd_icd_code()}" />
+                <br/>
+                <h:outputLabel for="age_years" value="tCaseDetails.age_years: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="age_years" for="age_years" value="#{indexData.gettCaseDetails_age_years()}" />
+                <br/>
+                <h:outputLabel for="admission_date" value="tCaseDetails.admission_date: " style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="admission_date" for="admission_date" value="#{indexData.gettCaseDetails_admission_date()}" />
+                <br/>
+                <br/>
+                <h:outputLabel for="icdc_code" value="icd_de.icdc_code: "  style="font-weight: bold ;font-size: 17px"/>
+                <h:outputLabel id="icdc_code" for="icdc_code" value="#{indexData.getIcd_de_icdc_code()}" />
+                <br/>
+                <h:outputLabel for="icd_description" value="icd_de.icd_description: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="icd_description" for="icd_description" value="#{indexData.getIcd_de_icd_description()}" />
+                <br/>   
+                <br/>
+                <h:outputLabel for="opsc_code" value="ops_de.opsc_code: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="opsc_code" for="opsc_code" value="#{indexData.getOps_de_opsc_code()}" />  
+                <br/>
+                <h:outputLabel for="ops_description" value="ops_de.ops_description: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="ops_description" for="ops_description" value="#{indexData.getOps_de_ops_description()}" />  
+                <br/>
+                <br/>
+                <h:outputLabel for="pat_number" value="t_patient.pat_number: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="pat_number" for="pat_number" value="#{indexData.getT_patient_pat_number()}" />  
+                <br/>
+                <h:outputLabel for="pat_first_name" value="t_patient.pat_first_name: "  style="font-weight: bold ;font-size: 17px" />
+                <h:outputLabel id="pat_first_name" for="pat_first_name" value="#{indexData.getT_patient_pat_first_name()}" />  
+                
+                <br/>
+                <br/>
+                <h:outputLabel for="TotalSize" value="Summe: "  style="font-weight: bold ;font-size: 20px"/>
+                <h:outputLabel id="TotalSize" for="TotalSize" value="#{indexData.totalSize}" />                
+                
+                
+                <br /><br />  
+                <p:progressBar widgetVar="pbAjax" ajax="true" value="#{indexData.progress}"   
+                               labelTemplate="{value}%" styleClass="animated" global="false">  
+                    <p:ajax event="complete" listener="#{indexData.onComplete}" update="message"    
+                            oncomplete="PF('startButton2').enable()"/>  
+                </p:progressBar>  
+            </h:form>
+        </p:panel>   
+        
+    </ui:define>
+    
+</ui:composition>
+
+
+

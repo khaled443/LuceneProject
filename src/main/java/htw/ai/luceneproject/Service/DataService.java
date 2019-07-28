@@ -1,17 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
  */
-package com.luceneproject.luceneproject;
+package htw.ai.luceneproject.Service;
 
-import com.luceneproject.pojo.*;
+import htw.ai.luceneproject.Model.TCaseIcd;
+import htw.ai.luceneproject.Model.TCaseDepartment;
+import htw.ai.luceneproject.Model.TCase;
+import htw.ai.luceneproject.Model.TCaseOps;
+import htw.ai.luceneproject.Model.TCaseDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -37,15 +43,24 @@ public enum DataService {
 
     EntityManagerFactory emff;
 
+    /**
+     * get Patients cases either from Database or from Hibernate Index, it
+     * depends on wither the request is with filters or not.
+     *
+     * @param start int
+     * @param size int
+     * @param filters filters
+     * @return List<Fall>
+     */
     public List<Fall> getFallsList(int start, int size, Map<String, Object> filters) {
 
         List<Fall> falls = new ArrayList<Fall>();
         long startTime = System.currentTimeMillis();
-
-        if (filters != null && filters.size() > 0) {
+        if ((filters != null && filters.size() > 1) || (filters.size() == 1 && !filters.get("globalFilter").equals(""))) {
+            System.out.println("yess its empty");
             falls = getListfromLucene(start, size, filters);
         } else {
-            falls = getListFromeHibernate(start, size);
+            falls = getResultsFromDatabase(start, size);
 
         }
         long endTime = System.currentTimeMillis();
@@ -56,6 +71,11 @@ public enum DataService {
         return falls;
     }
 
+    /**
+     * count patents cases from Database
+     *
+     * @return int
+     */
     public int getFallsTotalCount() {
         EntityManager em = getEntityManager();
         Query query = em.createQuery("Select count(*) From TCase t");
@@ -65,87 +85,118 @@ public enum DataService {
 
     }
 
-    private List<Fall> getListFromeHibernate(int start, int size) {
+    /**
+     * get results from Database
+     *
+     * @param start int
+     * @param size int
+     * @return List<Fall>
+     */
+    private List<Fall> getResultsFromDatabase(int start, int size) {
 
         EntityManager em = getEntityManager();
         TypedQuery<TCase> query = em.createNamedQuery("TCase.findAll", TCase.class);
         query.setFirstResult(start);
         query.setMaxResults(size);
-        Collection<TCase> tcases = query.getResultList();
-
         long startTime = System.currentTimeMillis();
-
+        Collection<TCase> tcases = query.getResultList();
         createFallsObjects(tcases);
         long endTime = System.currentTimeMillis();
-        System.out.println("*******************");
-        System.out.println("time took to create Fall Objects from Hibernate");
         float sec = (endTime - startTime) / 1000F;
-        System.out.println(sec + " seconds");
-
-        System.out.println("");
+        Logger.getLogger(DataService.class.getName()).log(Level.INFO,
+                "Time it took to get Results: " + sec + " Seconds");
         em.close();
-
         return falls;
     }
 
+    /**
+     * get results from Lucene index
+     *
+     * @param start int
+     * @param size int
+     * @param filters filters
+     * @return List<Fall>
+     */
     private List<Fall> getListfromLucene(int start, int size, Map<String, Object> filters) {
 
         EntityManager em = getEntityManager();
         FullTextEntityManager fullTextEntityManager
                 = org.hibernate.search.jpa.Search.getFullTextEntityManager(em);
-        
-        // create native Lucene query unsing the query DSL
-        // alternatively you can write the Lucene query using the Lucene query parser
-        // or the Lucene programmatic API. The Hibernate Search DSL is recommended though
+        /**
+         * create native Lucene query unsing the query DSL alternatively you can
+         * write the Lucene query using the Lucene query parser or the Lucene
+         * programmatic API. The Hibernate Search DSL is recommended though
+         */
+
         QueryBuilder qb = fullTextEntityManager.getSearchFactory()
                 .buildQueryBuilder().forEntity(TCase.class).get();
         LinkedHashSet<org.apache.lucene.search.Query> filterQueries = new LinkedHashSet<>();
 
         //filters
-        for (Map.Entry<String, Object> entry : filters.entrySet()) {
+        filters.entrySet().stream().map((entry) -> {
+            //globalFilter
+            if (entry.getKey().equals("globalFilter") && !entry.getValue().toString().isEmpty()) {
+                filterQueries.add(QueryManager.getGlobalSearchQuery(qb, entry));
+            }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("cs_case_number") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "csCaseNumber"));
+                filterQueries.add(QueryManager.getAutocompleteQuery(qb, entry, "csCaseNumber"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("insurance_identifier") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "insuranceIdentifier"));
+                filterQueries.add(QueryManager.getAutocompleteQuery(qb, entry, "insuranceIdentifier"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("insurance_number_patient") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "insuranceNumberPatient"));
+                filterQueries.add(QueryManager.getAutocompleteQuery(qb, entry, "insuranceNumberPatient"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("hd_icd_code") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "tCaseDetailsCollection.hdIcdCode"));
+                filterQueries.add(QueryManager.getAutocompleteQuery(qb, entry, "tCaseDetailsCollection.hdIcdCode"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("parseInt(fall.age_years)") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getIntegerQuery(qb, entry, "tCaseDetailsCollection.ageYears"));
-            }//admission_date
-
+            }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("admission_date") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getDateQuery(qb, entry, "tCaseDetailsCollection.admissionDate"));
-
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("pat_number") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getStringsStartsWithQuery(qb, entry, "tPatientId.patNumber"));
-
+                filterQueries.add(QueryManager.getAutocompleteQuery(qb, entry, "tPatientId.patNumber"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("pat_first_name") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getFuzzySearchQuery(qb, entry, "tPatientId.patFirstName"));
-
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("icdcCode") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getSimpleQueryString(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode.icdCode"));
+                filterQueries.add(QueryManager.getSimpleQuery(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode.icdCode"));
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("ICD_DESCRIPTION") && !entry.getValue().toString().isEmpty()) {
                 filterQueries.add(QueryManager.getFuzzySearchQuery(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseIcdCollection.icdcCode.icdDescription"));
-
             }
+            return entry;
+        }).map((entry) -> {
             if (entry.getKey().equals("opscCode") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getSimpleQueryString(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsCode"));
+                filterQueries.add(QueryManager.getSimpleQuery(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsCode"));
             }
-            if (entry.getKey().equals("OPS_DESCRIPTION") && !entry.getValue().toString().isEmpty()) {
-                filterQueries.add(QueryManager.getFuzzySearchQuery(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsDescription"));
-            }
-
-        }
+            return entry;
+        }).filter((entry) -> (entry.getKey().equals("OPS_DESCRIPTION") && !entry.getValue().toString().isEmpty())).forEachOrdered((entry) -> {
+            filterQueries.add(QueryManager.getFuzzySearchQuery(qb, entry, "tCaseDetailsCollection.tCaseDepartmentCollection.tCaseOpsCollection.opscCode.opsDescription"));
+        });
         BooleanQuery bq;
         bq = new BooleanQuery();
         if (filterQueries.size() > 0) {
@@ -162,17 +213,14 @@ public enum DataService {
             setFilteredFallSize(jpaQuery.getResultSize());
 
             // execute search
-            Collection<TCase> result = jpaQuery.getResultList();
             long startTime = System.currentTimeMillis();
+            Collection<TCase> result = jpaQuery.getResultList();
             createFallsObjects(result);
             long endTime = System.currentTimeMillis();
 
-            System.out.println("***************");
-            System.out.println("time took to create Fall Objects from Lucene");
-
             float sec = (endTime - startTime) / 1000F;
-            System.out.println(sec + " seconds");
-            System.out.println("");
+            Logger.getLogger(DataService.class.getName()).log(Level.INFO,
+                    "Time it took to get Results: " + sec + " Seconds");
         }
 
         em.close();
@@ -180,6 +228,11 @@ public enum DataService {
         return falls;
     }
 
+    /**
+     * Get Patients information from Database and create Fall object
+     *
+     * @param tCases Collection<TCase>, the results from Hibernate Index
+     */
     private void createFallsObjects(Collection<TCase> tCases) {
         falls.clear();
 
@@ -219,20 +272,23 @@ public enum DataService {
                 }
 
             }
+            try {
 
-            fall.setHd_icd_code(hdIcdCode);
-            fall.setAge_years(age_years);
-            fall.setAdmisstion_date(admisstion_date);
+                fall.setHd_icd_code(hdIcdCode);
+                fall.setAge_years(age_years);
+                fall.setAdmisstion_date(admisstion_date);
 
-            //TPatient
+                //TPatient
+                fall.setPat_number(tcase.getTPatientId().getPatNumber());
+                fall.setPat_first_name(tcase.getTPatientId().getPatFirstName());
+                fall.setIcdcCode(icds);
+                fall.setOpscCode(opss);
+                fall.setICD_DESCRIPTION(icdDescriptions);
+                fall.setOPS_DESCRIPTION(opsDescriptions);
+            } catch (Exception e) {
+                Logger.getLogger(DataService.class.getName()).log(Level.WARNING, e.getMessage());
 
-            fall.setPat_number(tcase.getTPatientId().getPatNumber());
-            fall.setPat_first_name(tcase.getTPatientId().getPatFirstName());
-            fall.setIcdcCode(icds);
-            fall.setOpscCode(opss);
-            fall.setICD_DESCRIPTION(icdDescriptions);
-            fall.setOPS_DESCRIPTION(opsDescriptions);
-
+            }
             falls.add(fall);
 
         }
@@ -246,6 +302,11 @@ public enum DataService {
         this.FilteredFallSize = FilteredFallSize;
     }
 
+    /**
+     * create new Entity manager factory when its Null
+     *
+     * @return EntityManager
+     */
     public EntityManager getEntityManager() {
         if (emff == null) {
             emff

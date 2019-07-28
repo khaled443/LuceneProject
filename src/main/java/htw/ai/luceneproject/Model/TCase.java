@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojo;
+package htw.ai.luceneproject.Model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -35,19 +35,19 @@ import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Analyzer;
 import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Parameter;
-import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.search.annotations.TokenFilterDef;
 import org.hibernate.search.annotations.TokenizerDef;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabieh
  */
 @Entity
 @Indexed
@@ -112,12 +112,12 @@ import org.hibernate.search.annotations.TokenizerDef;
 public class TCase implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
+    @DocumentId
     @Column(name = "id")
-    private BigDecimal id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "cancel_fl")
@@ -206,11 +206,11 @@ public class TCase implements Serializable {
     public TCase() {
     }
 
-    public TCase(BigDecimal id) {
+    public TCase(Integer id) {
         this.id = id;
     }
 
-    public TCase(BigDecimal id, short cancelFl, String csCaseNumber, String csCaseTypeEn, String csHospitalIdent, long csKisStatusFl, String csStatusEn, BigDecimal version) {
+    public TCase(Integer id, short cancelFl, String csCaseNumber, String csCaseTypeEn, String csHospitalIdent, long csKisStatusFl, String csStatusEn, BigDecimal version) {
         this.id = id;
         this.cancelFl = cancelFl;
         this.csCaseNumber = csCaseNumber;
@@ -221,11 +221,11 @@ public class TCase implements Serializable {
         this.version = version;
     }
 
-    public BigDecimal getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

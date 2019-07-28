@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojo;
+package htw.ai.luceneproject.Model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabieh
  */
 @Entity
 @Table(name = "t_case_ward")
@@ -47,7 +47,6 @@ import javax.xml.bind.annotation.XmlTransient;
 public class TCaseWard implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.luceneproject.pojo;
+package htw.ai.luceneproject.Model;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -28,7 +28,7 @@ import org.hibernate.search.annotations.Store;
 
 /**
  *
- * @author kk
+ * @author Khaled Halabiehs
  */
 @Entity
 @Table(name = "icd_de")
