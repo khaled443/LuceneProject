@@ -13,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,6 +22,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -54,68 +57,68 @@ import org.hibernate.search.annotations.TokenizerDef;
 @AnalyzerDef(name = "CustomAutocompleteAnalyzer",
         // Split input into tokens according to tokenizer
         tokenizer = @TokenizerDef(factory = WhitespaceTokenizerFactory.class), //
-        filters = { 
+        filters = {
             // Normalize token text to lowercase, as the user is unlikely to care about casing when searching for matches
             @TokenFilterDef(factory = LowerCaseFilterFactory.class),
             // Index partial words starting at the front, so we can provide Autocomplete functionality
             @TokenFilterDef(factory = EdgeNGramFilterFactory.class, params = {
-                @Parameter(name = "minGramSize", value = "1"),
-                @Parameter(name = "maxGramSize", value = "10")
-    }), 
-    })
+        @Parameter(name = "minGramSize", value = "1"),
+        @Parameter(name = "maxGramSize", value = "10")
+    }),})
 
 @AnalyzerDef(
-	name = "CustomTextAnalyzer",
-	tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-	filters = {
-		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-                @TokenFilterDef(factory = NGramFilterFactory.class, params = {
-                     @Parameter(name = "minGramSize", value = "3"),
-                     @Parameter(name = "maxGramSize", value = "10") }),
-		@TokenFilterDef(factory = SnowballPorterFilterFactory.class,        
-                        //German2 is just a modified version of German that handles the umlaut characters differently: for example it treats "ü" as "ue" in most contexsts.
-			params = { @Parameter(name = "language", value = "German2") })
-	}
+        name = "CustomTextAnalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+            @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+            @TokenFilterDef(factory = NGramFilterFactory.class, params = {
+        @Parameter(name = "minGramSize", value = "3"),
+        @Parameter(name = "maxGramSize", value = "10")}),
+            @TokenFilterDef(factory = SnowballPorterFilterFactory.class,
+                    //German2 is just a modified version of German that handles the umlaut characters differently: for example it treats "ü" as "ue" in most contexsts.
+                    params = {
+                        @Parameter(name = "language", value = "German2")})
+        }
 )
 
 @AnalyzerDef(
-	name = "CustomNameAnalyzer",
-	tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
-	filters = {
-		@TokenFilterDef(factory = LowerCaseFilterFactory.class),
-                @TokenFilterDef(factory = NGramFilterFactory.class, params = {
-                     @Parameter(name = "minGramSize", value = "3"),
-                     @Parameter(name = "maxGramSize", value = "10") })		
-	}
+        name = "CustomNameAnalyzer",
+        tokenizer = @TokenizerDef(factory = StandardTokenizerFactory.class),
+        filters = {
+            @TokenFilterDef(factory = LowerCaseFilterFactory.class),
+            @TokenFilterDef(factory = NGramFilterFactory.class, params = {
+        @Parameter(name = "minGramSize", value = "3"),
+        @Parameter(name = "maxGramSize", value = "10")})
+        }
 )
 @Table(name = "t_case")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TCase.findAll", query = "SELECT t FROM TCase t")
-    , @NamedQuery(name = "TCase.findById", query = "SELECT t FROM TCase t WHERE t.id = :id")
-    , @NamedQuery(name = "TCase.findByCancelFl", query = "SELECT t FROM TCase t WHERE t.cancelFl = :cancelFl")
-    , @NamedQuery(name = "TCase.findByCreationDate", query = "SELECT t FROM TCase t WHERE t.creationDate = :creationDate")
-    , @NamedQuery(name = "TCase.findByCreationUser", query = "SELECT t FROM TCase t WHERE t.creationUser = :creationUser")
-    , @NamedQuery(name = "TCase.findByCsBillingDate", query = "SELECT t FROM TCase t WHERE t.csBillingDate = :csBillingDate")
-    , @NamedQuery(name = "TCase.findByCsCaseNumber", query = "SELECT t FROM TCase t WHERE t.csCaseNumber = :csCaseNumber")
-    , @NamedQuery(name = "TCase.findByCsCaseTypeEn", query = "SELECT t FROM TCase t WHERE t.csCaseTypeEn = :csCaseTypeEn")
-    , @NamedQuery(name = "TCase.findByCsDoctorIdent", query = "SELECT t FROM TCase t WHERE t.csDoctorIdent = :csDoctorIdent")
-    , @NamedQuery(name = "TCase.findByCsFeeGroupEn", query = "SELECT t FROM TCase t WHERE t.csFeeGroupEn = :csFeeGroupEn")
-    , @NamedQuery(name = "TCase.findByCsHospitalIdent", query = "SELECT t FROM TCase t WHERE t.csHospitalIdent = :csHospitalIdent")
-    , @NamedQuery(name = "TCase.findByCsKisStatusFl", query = "SELECT t FROM TCase t WHERE t.csKisStatusFl = :csKisStatusFl")
-    , @NamedQuery(name = "TCase.findByCsStatusEn", query = "SELECT t FROM TCase t WHERE t.csStatusEn = :csStatusEn")
-    , @NamedQuery(name = "TCase.findByInsuranceIdentifier", query = "SELECT t FROM TCase t WHERE t.insuranceIdentifier = :insuranceIdentifier")
-    , @NamedQuery(name = "TCase.findByInsuranceNumberPatient", query = "SELECT t FROM TCase t WHERE t.insuranceNumberPatient = :insuranceNumberPatient")
-    , @NamedQuery(name = "TCase.findByModificationDate", query = "SELECT t FROM TCase t WHERE t.modificationDate = :modificationDate")
-    , @NamedQuery(name = "TCase.findByModificationUser", query = "SELECT t FROM TCase t WHERE t.modificationUser = :modificationUser")
-    , @NamedQuery(name = "TCase.findByVersion", query = "SELECT t FROM TCase t WHERE t.version = :version")})
+    @NamedQuery(name = "TCase.findAll", query = "SELECT t FROM TCase t"),
+    @NamedQuery(name = "TCase.findById", query = "SELECT t FROM TCase t WHERE t.id = :id"),
+    @NamedQuery(name = "TCase.findByCancelFl", query = "SELECT t FROM TCase t WHERE t.cancelFl = :cancelFl"),
+    @NamedQuery(name = "TCase.findByCreationDate", query = "SELECT t FROM TCase t WHERE t.creationDate = :creationDate"),
+    @NamedQuery(name = "TCase.findByCreationUser", query = "SELECT t FROM TCase t WHERE t.creationUser = :creationUser"),
+    @NamedQuery(name = "TCase.findByCsBillingDate", query = "SELECT t FROM TCase t WHERE t.csBillingDate = :csBillingDate"),
+    @NamedQuery(name = "TCase.findByCsCaseNumber", query = "SELECT t FROM TCase t WHERE t.csCaseNumber = :csCaseNumber"),
+    @NamedQuery(name = "TCase.findByCsCaseTypeEn", query = "SELECT t FROM TCase t WHERE t.csCaseTypeEn = :csCaseTypeEn"),
+    @NamedQuery(name = "TCase.findByCsDoctorIdent", query = "SELECT t FROM TCase t WHERE t.csDoctorIdent = :csDoctorIdent"),
+    @NamedQuery(name = "TCase.findByCsFeeGroupEn", query = "SELECT t FROM TCase t WHERE t.csFeeGroupEn = :csFeeGroupEn"),
+    @NamedQuery(name = "TCase.findByCsHospitalIdent", query = "SELECT t FROM TCase t WHERE t.csHospitalIdent = :csHospitalIdent"),
+    @NamedQuery(name = "TCase.findByCsKisStatusFl", query = "SELECT t FROM TCase t WHERE t.csKisStatusFl = :csKisStatusFl"),
+    @NamedQuery(name = "TCase.findByCsStatusEn", query = "SELECT t FROM TCase t WHERE t.csStatusEn = :csStatusEn"),
+    @NamedQuery(name = "TCase.findByInsuranceIdentifier", query = "SELECT t FROM TCase t WHERE t.insuranceIdentifier = :insuranceIdentifier"),
+    @NamedQuery(name = "TCase.findByInsuranceNumberPatient", query = "SELECT t FROM TCase t WHERE t.insuranceNumberPatient = :insuranceNumberPatient"),
+    @NamedQuery(name = "TCase.findByModificationDate", query = "SELECT t FROM TCase t WHERE t.modificationDate = :modificationDate"),
+    @NamedQuery(name = "TCase.findByModificationUser", query = "SELECT t FROM TCase t WHERE t.modificationUser = :modificationUser"),
+    @NamedQuery(name = "TCase.findByVersion", query = "SELECT t FROM TCase t WHERE t.version = :version")})
 public class TCase implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @DocumentId
+    @DocumentId   
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
@@ -136,8 +139,8 @@ public class TCase implements Serializable {
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "cs_case_number")
-    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO
-           , analyzer = @Analyzer(definition = "CustomAutocompleteAnalyzer")
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.NO,
+             analyzer = @Analyzer(definition = "CustomAutocompleteAnalyzer")
     )
     private String csCaseNumber;
 
@@ -191,7 +194,7 @@ public class TCase implements Serializable {
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
-    
+
 //tPatient    
     @JoinColumn(name = "t_patient_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -199,7 +202,7 @@ public class TCase implements Serializable {
     private TPatient tPatientId;
 
 //TCaseDetails   
-    @OneToMany(mappedBy = "tCaseId",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tCaseId", fetch = FetchType.LAZY)
     @IndexedEmbedded
     private Collection<TCaseDetails> tCaseDetailsCollection;
 

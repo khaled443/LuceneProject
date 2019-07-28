@@ -11,12 +11,14 @@ import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  * add
@@ -26,48 +28,61 @@ import javax.persistence.Persistence;
 @ManagedBean(name = "addData")
 @Stateless
 public class Add implements Serializable {
-    
+
     private String fallNummer;
     private int fallId = 0;
     FacesContext context = FacesContext.getCurrentInstance();
 
-    public void addNewFall()  {
-
+    public void addNewFall() {
+        TCase tcaseid = null;
+        TCase tcasefall = null;
         if (fallNummer != null && fallId != 0) {
-
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
+            EntityManager em = emf.createEntityManager();
+            Query idQuery = em.createQuery("select t from TCase t where t.id =:iid", TCase.class)
+                    .setParameter("iid", fallId);
             try {
-                EntityManagerFactory emf = Persistence.createEntityManagerFactory("com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU");
-                EntityManager em = emf.createEntityManager();
-                em.getTransaction().begin();
-//                BigDecimal bd = new BigDecimal(fallId);
-                TCase tcase = new TCase();
-                tcase.setId(1231223);
-                tcase.setCsCaseNumber(fallNummer);
-                tcase.setCsHospitalIdent("260101865");
-                tcase.setCsCaseTypeEn("DRG");
-                tcase.setVersion(BigDecimal.ZERO);
-                tcase.setCsStatusEn("NEW");
+                tcaseid = (TCase) idQuery.getSingleResult();
+            } catch (Exception e) {
+            }
+            if (tcaseid != null) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler.", "Id: " + fallId + " ist schon vorhanden"));
 
-                tcase.setCancelFl(new Short("0"));
-                tcase.setCreationDate(null);
-                tcase.setCreationUser(null);
-                tcase.setCsBillingDate(null);
-                tcase.setCsDoctorIdent(null);
-                tcase.setCsFeeGroupEn(null);
-                tcase.setCsKisStatusFl(0);
-                tcase.setInsuranceIdentifier("000000");
-                tcase.setInsuranceNumberPatient("0000000");
-                tcase.setModificationDate(null);
-                tcase.setModificationUser(null);
-                tcase.setTPatientId(null);
+            } else {
+                Query fallQuery = em.createQuery("select t from TCase t where t.csCaseNumber =:iid", TCase.class)
+                        .setParameter("iid", fallNummer);
+                try {
+                    tcasefall = (TCase) fallQuery.getSingleResult();
+                } catch (Exception e) {
+                }
 
-                em.persist(tcase);
-                em.getTransaction().commit();
-                 em.close();
-                emf.close();
-            } catch (NumberFormatException e) {
-                Logger.getLogger(Add.class.getName()).log(Level.SEVERE, "Error occurred while persisting new Entity", e);
-            } 
+                if (tcasefall != null) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler.", "Fall Nummer: " + fallNummer + " ist schon vorhanden"));
+
+                } else {
+                    try {
+
+                        em.getTransaction().begin();
+                        TCase tcase = new TCase();
+                        tcase.setId(fallId);
+                        tcase.setCsCaseNumber(fallNummer);
+                        tcase.setCsHospitalIdent("260101865");
+                        tcase.setCsCaseTypeEn("DRG");
+                        tcase.setVersion(BigDecimal.ZERO);
+                        tcase.setCsStatusEn("NEW");
+
+                        em.persist(tcase);
+                        em.getTransaction().commit();
+                        em.close();
+                        emf.close();
+                        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg ", "Patienten Fall ist hinzugefügt"));
+
+                    } catch (Exception e) {
+                        Logger.getLogger(Add.class.getName()).log(Level.SEVERE, "Error occurred while persisting new Entity", e);
+
+                    }
+                }
+            }
         }
 
     }
