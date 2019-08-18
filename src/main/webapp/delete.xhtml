@@ -7,7 +7,7 @@
     <ui:define name="source">
         <h:form>
             <p:growl id="growl" showDetail="true" sticky="false" />  
-            <p:panel header="Patientenfall löschen">  
+            <p:panel header="Behandlungsfall löschen">  
                 <p:outputLabel value="Fall Nummer:  " for="fall" />
                 <p:autoComplete id="fall" value="#{deleteData.fallNummer}" completeMethod="#{deleteData.completeText}"  />
                 <p:commandButton value="Löchen" id="ajax"  update="@form" action="#{deleteData.deleteFall}" style="margin-right:20px;" icon="pi pi-trash" styleClass="ui-priority-primary"  />

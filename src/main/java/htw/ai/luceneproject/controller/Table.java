@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package htw.ai.luceneproject.Controller;
+package htw.ai.luceneproject.controller;
 
-import htw.ai.luceneproject.Service.Fall;
-import htw.ai.luceneproject.Service.FallLazyDataModel;
+import htw.ai.luceneproject.service.Fall;
+import htw.ai.luceneproject.service.FallLazyDataModel;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,6 +24,10 @@ public class Table implements Serializable{
   
     FallLazyDataModel dataModel = new  FallLazyDataModel();
 
+    /**
+     * get lazy Data Model
+     * @return FallLazyDataModel
+     */
     public LazyDataModel<Fall> getModel(){
         return dataModel;
     }

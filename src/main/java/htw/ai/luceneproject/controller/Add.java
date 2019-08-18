@@ -3,9 +3,9 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
  */
-package htw.ai.luceneproject.Controller;
+package htw.ai.luceneproject.controller;
 
-import htw.ai.luceneproject.Model.TCase;
+import htw.ai.luceneproject.model.TCase;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.logging.Level;

@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package htw.ai.luceneproject.Model;
+package htw.ai.luceneproject.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -16,34 +17,34 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.IndexedEmbedded;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Khaled Halabieh
  */
 @Entity
-@Table(name = "t_case_ops")
+@Table(name = "t_case_ward")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TCaseOps.findAll", query = "SELECT t FROM TCaseOps t")
-    , @NamedQuery(name = "TCaseOps.findById", query = "SELECT t FROM TCaseOps t WHERE t.id = :id")
-    , @NamedQuery(name = "TCaseOps.findByCreationDate", query = "SELECT t FROM TCaseOps t WHERE t.creationDate = :creationDate")
-    , @NamedQuery(name = "TCaseOps.findByCreationUser", query = "SELECT t FROM TCaseOps t WHERE t.creationUser = :creationUser")
-    , @NamedQuery(name = "TCaseOps.findByModificationDate", query = "SELECT t FROM TCaseOps t WHERE t.modificationDate = :modificationDate")
-    , @NamedQuery(name = "TCaseOps.findByModificationUser", query = "SELECT t FROM TCaseOps t WHERE t.modificationUser = :modificationUser")
-    , @NamedQuery(name = "TCaseOps.findByOpscDatum", query = "SELECT t FROM TCaseOps t WHERE t.opscDatum = :opscDatum")
-    , @NamedQuery(name = "TCaseOps.findByOpscLocEn", query = "SELECT t FROM TCaseOps t WHERE t.opscLocEn = :opscLocEn")
-    , @NamedQuery(name = "TCaseOps.findByToGroupFl", query = "SELECT t FROM TCaseOps t WHERE t.toGroupFl = :toGroupFl")
-    , @NamedQuery(name = "TCaseOps.findByVersion", query = "SELECT t FROM TCaseOps t WHERE t.version = :version")})
-public class TCaseOps implements Serializable {
+    @NamedQuery(name = "TCaseWard.findAll", query = "SELECT t FROM TCaseWard t")
+    , @NamedQuery(name = "TCaseWard.findById", query = "SELECT t FROM TCaseWard t WHERE t.id = :id")
+    , @NamedQuery(name = "TCaseWard.findByCreationDate", query = "SELECT t FROM TCaseWard t WHERE t.creationDate = :creationDate")
+    , @NamedQuery(name = "TCaseWard.findByCreationUser", query = "SELECT t FROM TCaseWard t WHERE t.creationUser = :creationUser")
+    , @NamedQuery(name = "TCaseWard.findByModificationDate", query = "SELECT t FROM TCaseWard t WHERE t.modificationDate = :modificationDate")
+    , @NamedQuery(name = "TCaseWard.findByModificationUser", query = "SELECT t FROM TCaseWard t WHERE t.modificationUser = :modificationUser")
+    , @NamedQuery(name = "TCaseWard.findByVersion", query = "SELECT t FROM TCaseWard t WHERE t.version = :version")
+    , @NamedQuery(name = "TCaseWard.findByWardcAdmdate", query = "SELECT t FROM TCaseWard t WHERE t.wardcAdmdate = :wardcAdmdate")
+    , @NamedQuery(name = "TCaseWard.findByWardcDisdate", query = "SELECT t FROM TCaseWard t WHERE t.wardcDisdate = :wardcDisdate")
+    , @NamedQuery(name = "TCaseWard.findByWardcIdent", query = "SELECT t FROM TCaseWard t WHERE t.wardcIdent = :wardcIdent")})
+public class TCaseWard implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -61,51 +62,36 @@ public class TCaseOps implements Serializable {
     private Date modificationDate;
     @Column(name = "modification_user")
     private BigDecimal modificationUser;
-    @Column(name = "opsc_datum")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date opscDatum;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "opsc_loc_en")
-    private String opscLocEn;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "to_group_fl")
-    private long toGroupFl;
     @Basic(optional = false)
     @NotNull
     @Column(name = "version")
     private BigDecimal version;
-
-//opscCode    
-    @JoinColumn(name = "opsc_code", referencedColumnName = "ops_code")
-    @ManyToOne()
-    @IndexedEmbedded
-    private OpsDe opscCode;
-
-//tCaseDepartment
+    @Column(name = "wardc_admdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date wardcAdmdate;
+    @Column(name = "wardc_disdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date wardcDisdate;
+    @Size(max = 255)
+    @Column(name = "wardc_ident")
+    private String wardcIdent;
+    @OneToMany(mappedBy = "tCaseWardId")
+    private Collection<TCaseIcd> tCaseIcdCollection;
     @JoinColumn(name = "t_case_department_id", referencedColumnName = "id")
-    @ManyToOne
-    @ContainedIn
+    @ManyToOne(optional = false)
     private TCaseDepartment tCaseDepartmentId;
-    
-    
-    @JoinColumn(name = "t_case_ward_id", referencedColumnName = "id")
-    @ManyToOne
-    private TCaseWard tCaseWardId;
+    @OneToMany(mappedBy = "tCaseWardId")
+    private Collection<TCaseOps> tCaseOpsCollection;
 
-    public TCaseOps() {
+    public TCaseWard() {
     }
 
-    public TCaseOps(BigDecimal id) {
+    public TCaseWard(BigDecimal id) {
         this.id = id;
     }
 
-    public TCaseOps(BigDecimal id, String opscLocEn, long toGroupFl, BigDecimal version) {
+    public TCaseWard(BigDecimal id, BigDecimal version) {
         this.id = id;
-        this.opscLocEn = opscLocEn;
-        this.toGroupFl = toGroupFl;
         this.version = version;
     }
 
@@ -149,30 +135,6 @@ public class TCaseOps implements Serializable {
         this.modificationUser = modificationUser;
     }
 
-    public Date getOpscDatum() {
-        return opscDatum;
-    }
-
-    public void setOpscDatum(Date opscDatum) {
-        this.opscDatum = opscDatum;
-    }
-
-    public String getOpscLocEn() {
-        return opscLocEn;
-    }
-
-    public void setOpscLocEn(String opscLocEn) {
-        this.opscLocEn = opscLocEn;
-    }
-
-    public long getToGroupFl() {
-        return toGroupFl;
-    }
-
-    public void setToGroupFl(long toGroupFl) {
-        this.toGroupFl = toGroupFl;
-    }
-
     public BigDecimal getVersion() {
         return version;
     }
@@ -181,12 +143,37 @@ public class TCaseOps implements Serializable {
         this.version = version;
     }
 
-    public OpsDe getOpscCode() {
-        return opscCode;
+    public Date getWardcAdmdate() {
+        return wardcAdmdate;
     }
 
-    public void setOpscCode(OpsDe opscCode) {
-        this.opscCode = opscCode;
+    public void setWardcAdmdate(Date wardcAdmdate) {
+        this.wardcAdmdate = wardcAdmdate;
+    }
+
+    public Date getWardcDisdate() {
+        return wardcDisdate;
+    }
+
+    public void setWardcDisdate(Date wardcDisdate) {
+        this.wardcDisdate = wardcDisdate;
+    }
+
+    public String getWardcIdent() {
+        return wardcIdent;
+    }
+
+    public void setWardcIdent(String wardcIdent) {
+        this.wardcIdent = wardcIdent;
+    }
+
+    @XmlTransient
+    public Collection<TCaseIcd> getTCaseIcdCollection() {
+        return tCaseIcdCollection;
+    }
+
+    public void setTCaseIcdCollection(Collection<TCaseIcd> tCaseIcdCollection) {
+        this.tCaseIcdCollection = tCaseIcdCollection;
     }
 
     public TCaseDepartment getTCaseDepartmentId() {
@@ -197,12 +184,13 @@ public class TCaseOps implements Serializable {
         this.tCaseDepartmentId = tCaseDepartmentId;
     }
 
-    public TCaseWard getTCaseWardId() {
-        return tCaseWardId;
+    @XmlTransient
+    public Collection<TCaseOps> getTCaseOpsCollection() {
+        return tCaseOpsCollection;
     }
 
-    public void setTCaseWardId(TCaseWard tCaseWardId) {
-        this.tCaseWardId = tCaseWardId;
+    public void setTCaseOpsCollection(Collection<TCaseOps> tCaseOpsCollection) {
+        this.tCaseOpsCollection = tCaseOpsCollection;
     }
 
     @Override
@@ -215,10 +203,10 @@ public class TCaseOps implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TCaseOps)) {
+        if (!(object instanceof TCaseWard)) {
             return false;
         }
-        TCaseOps other = (TCaseOps) object;
+        TCaseWard other = (TCaseWard) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -227,7 +215,7 @@ public class TCaseOps implements Serializable {
 
     @Override
     public String toString() {
-        return "com.luceneproject.pojo.TCaseOps[ id=" + id + " ]";
+        return "com.luceneproject.pojo.TCaseWard[ id=" + id + " ]";
     }
     
 }

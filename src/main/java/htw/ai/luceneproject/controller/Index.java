@@ -3,14 +3,14 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-package htw.ai.luceneproject.Controller;
+package htw.ai.luceneproject.controller;
 
-import htw.ai.luceneproject.Service.CustomIndexerProgressMonitor;
-import htw.ai.luceneproject.Model.IcdDe;
-import htw.ai.luceneproject.Model.TCase;
-import htw.ai.luceneproject.Model.TPatient;
-import htw.ai.luceneproject.Model.OpsDe;
-import htw.ai.luceneproject.Model.TCaseDetails;
+import htw.ai.luceneproject.service.CustomIndexerProgressMonitor;
+import htw.ai.luceneproject.model.IcdDe;
+import htw.ai.luceneproject.model.TCase;
+import htw.ai.luceneproject.model.TPatient;
+import htw.ai.luceneproject.model.OpsDe;
+import htw.ai.luceneproject.model.TCaseDetails;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -158,7 +158,7 @@ public class Index implements Serializable {
         em.close();
         return count;
     }
-    
+
     public Integer getProgress() {
         if (progress == null) {
             progress = 0;

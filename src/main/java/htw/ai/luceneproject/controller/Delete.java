@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package htw.ai.luceneproject.Controller;
+package htw.ai.luceneproject.controller;
 
-import htw.ai.luceneproject.Service.QueryManager;
-import htw.ai.luceneproject.Model.TCase;
-import htw.ai.luceneproject.Model.TCaseDetails;
+import htw.ai.luceneproject.service.QueryManager;
+import htw.ai.luceneproject.model.TCase;
+import htw.ai.luceneproject.model.TCaseDetails;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

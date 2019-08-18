@@ -2,15 +2,15 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.luceneProject_LuceneProject_war_1.0-SNAPSHOTPU">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>htw.ai.luceneproject.Model.TCaseIcd</class>
-    <class>htw.ai.luceneproject.Model.IcdDe</class>
-    <class>htw.ai.luceneproject.Model.TCaseDepartment</class>
-    <class>htw.ai.luceneproject.Model.TCase</class>
-    <class>htw.ai.luceneproject.Model.TCaseOps</class>
-    <class>htw.ai.luceneproject.Model.TCaseDetails</class>
-    <class>htw.ai.luceneproject.Model.TPatient</class>
-    <class>htw.ai.luceneproject.Model.OpsDe</class>
-    <class>htw.ai.luceneproject.Model.TCaseWard</class>
+    <class>htw.ai.luceneproject.model.OpsDe</class>
+    <class>htw.ai.luceneproject.model.IcdDe</class>
+    <class>htw.ai.luceneproject.model.TCaseIcd</class>
+    <class>htw.ai.luceneproject.model.TCaseWard</class>
+    <class>htw.ai.luceneproject.model.TCase</class>
+    <class>htw.ai.luceneproject.model.TCaseDepartment</class>
+    <class>htw.ai.luceneproject.model.TCaseOps</class>
+    <class>htw.ai.luceneproject.model.TCaseDetails</class>
+    <class>htw.ai.luceneproject.model.TPatient</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=khdb2"/>

@@ -3,13 +3,13 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
  */
-package htw.ai.luceneproject.Service;
+package htw.ai.luceneproject.service;
 
-import htw.ai.luceneproject.Model.TCaseIcd;
-import htw.ai.luceneproject.Model.TCaseDepartment;
-import htw.ai.luceneproject.Model.TCase;
-import htw.ai.luceneproject.Model.TCaseOps;
-import htw.ai.luceneproject.Model.TCaseDetails;
+import htw.ai.luceneproject.model.TCaseIcd;
+import htw.ai.luceneproject.model.TCaseDepartment;
+import htw.ai.luceneproject.model.TCase;
+import htw.ai.luceneproject.model.TCaseOps;
+import htw.ai.luceneproject.model.TCaseDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package htw.ai.luceneproject.Service;
+package htw.ai.luceneproject.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +20,12 @@ import org.hibernate.search.query.dsl.QueryBuilder;
  */
 public class QueryManager {
 
+    /**
+     * get Lucene Query for general search
+     * @param qb QueryBuilder
+     * @param entry search term 
+     * @return Lucene Query
+     */
     public static org.apache.lucene.search.Query getGlobalSearchQuery(QueryBuilder qb, Map.Entry<String, Object> entry) {
 
         org.apache.lucene.search.Query luceneQuery = qb
@@ -41,6 +47,13 @@ public class QueryManager {
         return luceneQuery;
     }
 
+    /**
+     * get Lucene Query for autocomplete 
+     * @param qb QueryBuilder
+     * @param entry search term 
+     * @param field field name
+     * @return Lucene Query
+     */
     public static org.apache.lucene.search.Query getAutocompleteQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
         org.apache.lucene.search.Query luceneQuery = qb
                 .keyword()
@@ -51,6 +64,13 @@ public class QueryManager {
         return luceneQuery;
     }
 
+    /**
+     * get Lucene Query to search in icdcCode and opscCode
+     * @param qb  QueryBuilder
+     * @param entry search term 
+     * @param field field name
+     * @return Lucene Query
+     */
     public static org.apache.lucene.search.Query getSimpleQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
 
         org.apache.lucene.search.Query luceneQuery = qb
@@ -63,6 +83,13 @@ public class QueryManager {
         return luceneQuery;
     }
 
+    /**
+     * get Lucene Query to search in Date field 
+     * @param qb  QueryBuilder
+     * @param entry  search term 
+     * @param field field name
+     * @return  Lucene Query
+     */
     public static org.apache.lucene.search.Query getDateQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
         org.apache.lucene.search.Query query = qb
                 .range()
@@ -75,6 +102,13 @@ public class QueryManager {
 
     }
 
+    /**
+     * get Lucene Query to search in Patient age field
+     * @param qb  QueryBuilder
+     * @param entry   search term 
+     * @param field field name
+     * @return  Lucene Query
+     */
     public static org.apache.lucene.search.Query getIntegerQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
         org.apache.lucene.search.Query luceneQuery = qb
                 .keyword()
@@ -85,6 +119,13 @@ public class QueryManager {
         return luceneQuery;
     }
 
+    /**
+     * get Lucene Query to start fuzzy search in diseases description
+     * @param qb QueryBuilder
+     * @param entry search term
+     * @param field field name
+     * @return Lucene Query
+     */
     public static org.apache.lucene.search.Query getFuzzySearchQuery(QueryBuilder qb, Map.Entry<String, Object> entry, String field) {
         org.apache.lucene.search.Query luceneQuery = qb
                 .keyword()
@@ -92,7 +133,6 @@ public class QueryManager {
                 .withEditDistanceUpTo(2)
                 .withPrefixLength(2)
                 .withThreshold(.8f)
-                //        .withPrefixLength( 1 )
                 .onField(field).boostedTo(3)
                 .matching(entry.getValue().toString().toLowerCase())
                 .createQuery();

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package htw.ai.luceneproject.Service;
+package htw.ai.luceneproject.service;
 
 import org.hibernate.search.batchindexing.MassIndexerProgressMonitor;
 import org.hibernate.search.batchindexing.impl.SimpleIndexingProgressMonitor;
